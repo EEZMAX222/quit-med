@@ -4,29 +4,29 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="theme-color" content="#070b0c" />
-<title>劝人学医 · 临床医学劝退模拟器</title>
-<meta name="description" content="一款关于医学生规培生存的黑色幽默文字游戏。在把青春押给临床医学之前，先看看代价。" />
+<title>学医之前 · 临床医学职业体验</title>
+<meta name="description" content="一款临床医学职业体验互动作品。用 36 个月，提前了解学医的培养周期、工作节奏与职业路径。" />
 <meta name="robots" content="index,follow" />
 <link rel="canonical" href="https://eezmax222.github.io/quit-med/" />
 <meta property="og:type" content="website" />
 <meta property="og:locale" content="zh_CN" />
-<meta property="og:site_name" content="劝人学医" />
-<meta property="og:title" content="劝人学医 · 临床医学劝退模拟器" />
-<meta property="og:description" content="一款关于医学生规培生存的黑色幽默文字游戏。在把青春押给临床医学之前，先看看代价。" />
+<meta property="og:site_name" content="学医之前" />
+<meta property="og:title" content="学医之前 · 临床医学职业体验" />
+<meta property="og:description" content="一款临床医学职业体验互动作品。用 36 个月，提前了解学医的培养周期、工作节奏与职业路径。" />
 <meta property="og:url" content="https://eezmax222.github.io/quit-med/" />
 <meta property="og:image" content="https://eezmax222.github.io/quit-med/og.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="劝人学医 · 临床医学劝退模拟器" />
-<meta name="twitter:description" content="在把青春押给临床医学之前，先看看代价。" />
+<meta name="twitter:title" content="学医之前 · 临床医学职业体验" />
+<meta name="twitter:description" content="八年很长，先把路看清。了解之后，再做选择。" />
 <meta name="twitter:image" content="https://eezmax222.github.io/quit-med/og.png" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23070b0c'/%3E%3Cpath d='M10 34h10l5-14 8 26 6-18 5 6h10' fill='none' stroke='%234fd1c5' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
 <link rel="apple-touch-icon" href="icon-192.png" />
 <link rel="manifest" href="manifest.webmanifest" />
 <style>
 /* ============================================================
-   劝人学医 — 临床医学劝退模拟器
+   学医之前 — 临床医学职业体验
    ============================================================ */
 :root {
   --bg: #070b0c;
@@ -593,11 +593,11 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--teal); outline-
 <header class="chrome">
   <button class="brand" id="brand-home" title="回到标题">
     <span class="brand-mark"><i></i></span>
-    <span class="brand-text">劝人学医<em>QUIT MED</em></span>
+    <span class="brand-text">学医之前<em>BEFORE MED</em></span>
   </button>
   <div class="chrome-actions">
     <button class="chip-btn" id="btn-share" title="复制页面链接">分享</button>
-    <button class="chip-btn" id="btn-report">劝退报告</button>
+    <button class="chip-btn" id="btn-report">学医参考</button>
     <button class="chip-btn" id="btn-sound" aria-pressed="true">音效 <span id="sound-state">开</span></button>
   </div>
 </header>
@@ -607,32 +607,32 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--teal); outline-
   <!-- ============ TITLE ============ -->
   <section id="s-title" class="screen active" aria-label="标题">
     <div class="title-wrap">
-      <div class="eyebrow"><span class="live-dot"></span> 2026 高考志愿 · 特别提醒</div>
-      <h1 class="mega">劝人学医<span class="seal">临床</span></h1>
-      <p class="title-sub">天打雷劈，是玄学；<br /><span class="hl">规培三年，是现实。</span></p>
-      <p class="title-desc">一款关于临床医学的劝退模拟器。<br />在把青春押上去之前，先看看代价。</p>
+      <div class="eyebrow"><span class="live-dot"></span> 2026 高考志愿 · 职业体验</div>
+      <h1 class="mega">学医之前<span class="seal">临床</span></h1>
+      <p class="title-sub">八年很长，先把路看清。<br /><span class="hl">了解之后，再做选择。</span></p>
+      <p class="title-desc">一款临床医学职业体验互动作品。<br />用 36 个月，提前了解学医的真实节奏。</p>
       <div class="title-actions">
-        <button class="btn primary" id="btn-start">开始填报志愿</button>
-        <button class="btn ghost hidden" id="btn-continue">继续上次的规培</button>
-        <button class="btn link" id="btn-report-title">先看劝退报告 →</button>
+        <button class="btn primary" id="btn-start">开始体验</button>
+        <button class="btn ghost hidden" id="btn-continue">继续上次体验</button>
+        <button class="btn link" id="btn-report-title">先看学医参考 →</button>
       </div>
       <div class="title-meta">
-        <span>建议游玩 8–12 分钟</span><span>·</span><span>12 个科室</span><span>·</span><span>13 种结局</span><span>·</span><span>自动存档</span>
+        <span>互动科普</span><span>·</span><span>36 个月</span><span>·</span><span>12 个科室</span><span>·</span><span>13 种结局</span><span>·</span><span>自动存档</span>
       </div>
     </div>
     <div class="ticker" aria-hidden="true">
       <div class="ticker-track">
-        <span>“医生，我网上查了，我这个病不用做手术吧？”</span><span class="tick-sep">/</span>
-        <span>“你们当医生的，一个月不得好几万？”</span><span class="tick-sep">/</span>
-        <span>“年轻人，多吃点苦。” </span><span class="tick-sep">/</span>
-        <span>“不就是值个夜班吗？”</span><span class="tick-sep">/</span>
-        <span>“隔壁老王家的孩子学计算机，年终奖二十万。”</span><span class="tick-sep">/</span>
-        <span>“学医好，越老越吃香。”</span><span class="tick-sep">/</span>
-        <span>“医生，你结婚了吗？有房吗？”</span><span class="tick-sep">/</span>
-        <span>“你们不是白衣天使吗？”</span><span class="tick-sep">/</span>
+        <span>5 年本科</span><span class="tick-sep">/</span>
+        <span>3 年规培</span><span class="tick-sep">/</span>
+        <span>12 个科室轮转</span><span class="tick-sep">/</span>
+        <span>36 个月</span><span class="tick-sep">/</span>
+        <span>38 个事件</span><span class="tick-sep">/</span>
+        <span>13 种结局</span><span class="tick-sep">/</span>
+        <span>了解之后，再做选择</span><span class="tick-sep">/</span>
+        <span>本作品为互动科普</span><span class="tick-sep">/</span>
       </div>
     </div>
-    <div class="title-foot">本游戏为讽刺作品，情节虚构；数字为行业常见区间，具体因地区、医院、科室而异。<br />含猝死、抑郁、伤医等情节，请酌情游玩。</div>
+    <div class="title-foot">本作品为互动科普，情节与人物均为虚构；培养周期、补贴等信息为行业常见区间，具体因地区、医院、科室而异。适龄提示：16+</div>
   </section>
 
   <!-- ============ APPLY ============ -->
@@ -706,7 +706,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--teal); outline-
           <div class="actions" id="actions"></div>
           <div class="game-links">
             <button class="txt-link danger" id="btn-quit">我想转行</button>
-            <button class="txt-link" id="btn-report-game">查看劝退报告</button>
+            <button class="txt-link" id="btn-report-game">查看学医参考</button>
             <button class="txt-link" id="btn-save-quit">保存并退出</button>
           </div>
         </div>
@@ -742,7 +742,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--teal); outline-
       <div class="ending-ledger" id="ending-ledger"></div>
       <div class="ending-score">
         <div class="score-num" id="quit-index">0</div>
-        <div class="score-label">劝 退 指 数</div>
+        <div class="score-label">参 考 指 数</div>
         <div class="score-note" id="score-note"></div>
       </div>
       <div class="compare" id="ending-compare"></div>
@@ -750,9 +750,9 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--teal); outline-
         <button class="btn primary" id="btn-again">再活一次</button>
         <button class="btn ghost" id="btn-reapply">重新填报志愿</button>
         <button class="btn ghost" id="btn-card">保存结局卡</button>
-        <button class="btn link" id="btn-report-end">查看劝退报告 →</button>
+        <button class="btn link" id="btn-report-end">查看学医参考 →</button>
       </div>
-      <div class="ending-foot">劝人学医，天打雷劈。本游戏不构成任何职业建议，只负责把账单摊开给你看。</div>
+      <div class="ending-foot">学医之前，先把路看清。本作品不构成任何职业建议，只提供一份参考。</div>
     </div>
   </section>
 
@@ -762,24 +762,24 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--teal); outline-
   </section>
 
   <!-- ============ REPORT ============ -->
-  <section id="s-report" class="screen" aria-label="劝退报告">
+  <section id="s-report" class="screen" aria-label="学医参考">
     <div class="report-wrap">
       <div class="report-top">
         <button class="btn ghost small" id="btn-report-back">← 返回</button>
-        <div class="report-stamp">劝退报告<br /><em>NO. 2026-01</em></div>
+        <div class="report-stamp">学医参考<br /><em>NO. 2026-01</em></div>
       </div>
       <div class="report-head">
-        <div class="eyebrow"><span class="live-dot"></span> 内部资料 · 请转给正在填志愿的人</div>
-        <h2>在按下“确认”之前，<br />先算清这七笔账。</h2>
-        <p>以下内容基于公开报道与行业普遍情况整理。数字为常见区间，具体因地区、医院、科室、学历差异很大。它不是判决书，只是一张价目表。</p>
+        <div class="eyebrow"><span class="live-dot"></span> 资料整理 · 供考生与家长参考</div>
+        <h2>在做出选择之前，<br />先了解这七件事。</h2>
+        <p>以下内容基于公开报道与行业普遍情况整理。数字为常见区间，具体因地区、医院、科室、学历差异很大。它不是判决书，只是一份参考资料。</p>
       </div>
       <div id="report-body"></div>
       <div class="report-end">
         <h3>写在最后</h3>
-        <p>这不是在否定医生。恰恰相反，正因为医生重要，才不该让一群 18 岁的孩子，在完全不知道代价的情况下，用十年青春去换一件白大褂。</p>
-        <p>如果你看完这些，仍然想学医——那祝你成为一个好医生。但请记住：理想不能当饭吃，夜班也不会因为你善良就少一个。</p>
+        <p>这不是在否定医生。医生的工作很重要，也值得被认真了解。我们希望考生和家长在做决定前，能看到培养周期、工作节奏和职业路径的全貌。</p>
+        <p>如果你了解之后仍然想学医，那祝你成为一个好医生。理想很珍贵，也需要现实的支撑；提前了解，才能走得更稳。</p>
         <p class="report-small">数据说明：规培补贴、薪资、工作时长等均为公开报道中的常见区间，非精确统计；政策与待遇可能随时间变化。本作不构成职业规划建议。</p>
-        <button class="btn primary" id="btn-report-cta">回到志愿表，重新选一次</button>
+        <button class="btn primary" id="btn-report-cta">回到志愿表，重新看看</button>
       </div>
     </div>
   </section>
@@ -795,7 +795,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--teal); outline-
    ============================================================ */
 window.GAME_DATA = {
   meta: {
-    title: '劝人学医',
+    title: '学医之前',
     version: '1.0',
     startYear: 2031,
     startAge: 23,
@@ -965,8 +965,8 @@ window.GAME_DATA = {
   majors: [
     {
       id: 'clinical', name: '临床医学', years: '五年制', salary: '规培期 1.8K/月', quit: 99,
-      note: '母亲推荐 · 班主任推荐 · 招生老师推荐 · 亲戚也推荐',
-      badge: '全家都满意'
+      note: '培养周期较长 · 建议提前了解',
+      badge: '需要长期投入'
     },
     { id: 'cs', name: '计算机科学与技术', years: '四年制', salary: '起薪 12K–25K', quit: 35, note: '35 岁危机，但至少 35 岁前有钱' },
     { id: 'teacher', name: '汉语言文学（师范）', years: '四年制', salary: '起薪 6K–10K', quit: 42, note: '有寒暑假，也有家长群' },
@@ -1042,25 +1042,25 @@ window.GAME_DATA = {
 
   /* ---------------- 人生对照 ---------------- */
   timeline: [
-    { age: '22 岁', you: '大五，准备考研', them: '本科毕业，第一份工作 8K' },
-    { age: '23 岁', you: '本科毕业，开始规培', them: '工作一年，开始存钱' },
-    { age: '26 岁', you: '规培结业，月薪 7K，开始投简历', them: '工作四年，年薪 25W，准备结婚' },
-    { age: '28 岁', you: '读博 / 专培 / 二战考核', them: '当上小组长，买了第一套房' },
-    { age: '30 岁', you: '还在读书或培训，靠家里', them: '孩子上幼儿园，年假去日本' },
-    { age: '32 岁', you: '博士毕业，非升即走', them: '跳槽涨薪，或被优化后拿 N+1' },
-    { age: '35 岁', you: '终于评上主治，夜班照旧', them: '房贷还剩 20 年，但周末能陪孩子' }
+    { age: '22 岁', you: '大五，准备考研', them: '本科毕业，开始第一份工作' },
+    { age: '23 岁', you: '本科毕业，开始规培', them: '工作一年，逐渐适应职场' },
+    { age: '26 岁', you: '规培结业，开始投简历', them: '工作四年，职业进入新阶段' },
+    { age: '28 岁', you: '读博 / 专培，继续积累', them: '在工作中承担更多责任' },
+    { age: '30 岁', you: '仍在深造或培训', them: '家庭与工作逐渐稳定' },
+    { age: '32 岁', you: '博士毕业，进入聘期考核', them: '职业发展各有节奏' },
+    { age: '35 岁', you: '评上主治，继续临床工作', them: '工作与家庭各有安排' }
   ],
 
-  /* ---------------- 劝退报告 ---------------- */
+  /* ---------------- 学医参考 ---------------- */
   report: [
     {
-      no: '01', title: '时间账', intro: '临床医学的学制，是所有本科专业里最长的一档。而这只是起点。',
+      no: '01', title: '培养周期', intro: '临床医学的学制较长，提前了解每个阶段，有助于做好时间规划。',
       list: [
         '本科 5 年（多数专业 4 年）。',
         '规培 3 年：住院医师规范化培训，期间拿的是补贴，不是工资。',
         '三甲医院招聘普遍要求硕士或博士。专硕并轨可以省时间，学硕 + 规培则更久。',
         '博士 3–4 年，博士后 2–3 年；部分专科还要 2–4 年专科培训。',
-        '最快 8 年拿到规培证；常见 11–13 年才能在三甲独立执业。'
+        '最快 8 年拿到规培证；不同学历路径所需时间不同。'
       ],
       table: {
         head: ['年龄', '节点'],
@@ -1069,78 +1069,78 @@ window.GAME_DATA = {
           ['23 岁', '本科毕业，开始规培'],
           ['26 岁', '规培结业，拿到规培证'],
           ['29 岁', '硕士 / 博士毕业（如继续深造）'],
-          ['32–35 岁', '主治医师，非升即走的第一道坎']
+          ['32–35 岁', '主治医师，进入职业发展新阶段']
         ]
       },
-      callout: '你 26 岁那年，高中同学已经工作 4 年、交了三年的公积金。你刚拿到一张规培证，开始投第一份正式简历。'
+      callout: '提前了解每个节点，才能更从容地安排学习、考试与生活。'
     },
     {
-      no: '02', title: '钱账', intro: '“医生越老越吃香”这句话，前半句是“越老”，后半句是“吃香”。中间那几十年，没人替你付房租。',
+      no: '02', title: '经济成本', intro: '不同地区、医院和科室的补贴与收入差异较大，建议提前了解当地情况。',
       list: [
         '规培补贴全国没有统一标准，多数地区每月 1000–4000 元；夜班费常见 30–100 元/次。',
-        '同期本科毕业生起薪，计算机、金融等专业常见 8K–20K。',
+        '同期本科毕业生的起薪因专业、城市和行业差异较大。',
         '规培期间还要支出：房租、吃饭、通勤、考试报名费、论文版面费、继续教育。',
         '结业后住院医师月薪常见 6K–12K，地区、医院、科室差异很大。',
-        '集采、DRG/DIP 控费、绩效改革，都会直接影响收入。'
+        '医保支付方式改革、绩效方案等会影响科室收入结构。'
       ],
-      callout: '一个规培生一个月的收入，可能不够付一间次卧的房租。<b>这不是段子，是很多人的工资条。</b>'
+      callout: '建议提前做预算，了解补贴发放方式与当地生活成本。'
     },
     {
-      no: '03', title: '身体账', intro: '医院是一个 24 小时运转的地方。病人不会在下午五点停止生病，所以医生也不会。',
+      no: '03', title: '工作节奏', intro: '医院 24 小时运转，临床工作通常需要轮班。',
       list: [
-        '夜班、24 小时值班、36 小时连轴转，是很多科室的常态。',
-        '长期睡眠剥夺、三餐不规律、久站久坐。',
-        '职业暴露：针刺伤、感染、辐射、化学消毒剂。',
-        '体检报告上的常见项：脂肪肝、窦性心动过速、甲状腺结节、颈椎反弓。',
-        '伤医事件不是新闻里的偶发，而是每个急诊科医生都想过的事。'
+        '夜班、24 小时值班、连班在部分科室较常见。',
+        '保持规律作息、合理饮食和适量运动很重要。',
+        '注意职业防护：针刺、感染、辐射等。',
+        '定期体检，关注颈肩腰腿与睡眠状态。',
+        '医疗环境复杂，沟通与自我保护同样重要。'
       ],
-      callout: '你学的是救人，但没有人教你怎么救自己。'
+      callout: '照顾好自己，才能更好地照顾病人。'
     },
     {
-      no: '04', title: '心理账', intro: '规培生处在医院食物链的最底端：干最多的活，拿最少的钱，承担不小的责任。',
+      no: '04', title: '心理调适', intro: '高强度、高责任的环境，需要良好的心理调适与支持系统。',
       list: [
-        '医患纠纷、投诉、举证责任，往往先落到一线医生头上。',
+        '医患沟通、投诉处理需要经验与技巧。',
         '考核层层叠叠：出科考、年度考、执业医师、结业考、职称考。',
-        '科研压力：论文、课题、SCI、非升即走。',
-        '“你是医生，你怎么能生病？”——这句话本身就是一种病。',
-        '多项研究提示，医学生和年轻医生的抑郁、焦虑、职业倦怠检出率高于普通人群。'
+        '科研压力：论文、课题、SCI、聘期考核。',
+        '感到压力时，及时向同事、家人或心理专业人士求助。',
+        '规律运动、兴趣爱好和休息同样重要。'
       ],
-      callout: '最难熬的不是累，是你在凌晨三点怀疑自己为什么要在这里。'
+      callout: '求助不是软弱，是对自己负责。'
     },
     {
-      no: '05', title: '婚恋与家庭', intro: '20 多岁，是谈恋爱、结婚、生孩子的年纪。也是你值夜班、考试、写论文的年纪。',
+      no: '05', title: '生活与家庭', intro: '20 多岁是学习、工作和生活同时展开的阶段，提前沟通很重要。',
       list: [
-        '26–30 岁仍在培训，经济不独立，很多人还需要父母补贴。',
-        '异地、没房、没时间，是相亲市场上的三座大山。',
-        '父母生病时，你可能正在值班，电话接不到。',
-        '“医生”这个职业在婚恋市场有光环，但光环不能付首付。',
-        '有孩子的医生，很多都错过了孩子的第一次走路。'
+        '培训期间经济可能尚未完全独立，可与家人一起规划。',
+        '异地、时间安排需要与伴侣提前沟通。',
+        '父母需要时，尽量提前安排陪护与请假。',
+        '职业光环之外，生活也需要经营。',
+        '陪伴家人的时间，需要主动争取。'
       ],
-      callout: '你妈说“学医好，越老越吃香”。她没说，老的那一天来之前，你要先熬过多少个夜班。'
+      callout: '把重要的人和事放进日程里，而不只是排班表里。'
     },
     {
-      no: '06', title: '出路账', intro: '学医不是一条直线。规培结业之后，你还要面对一个更残酷的问题：去哪里。',
+      no: '06', title: '职业路径', intro: '规培结业后，职业路径不止一条。',
       list: [
-        '三甲医院：博士 + SCI + 关系，合同制，非升即走。',
-        '二甲 / 县医院：有编制，平台有限，夜班照旧。',
-        '私立 / 民营：看职称、口碑和流量。',
-        '药企、器械、保险、互联网医疗、医疗 AI：转行的常见去处。',
-        '公务员 / 事业单位：卫健委、疾控、医保局，竞争同样激烈。',
-        '完全转行：考公、编程、金融、教师。你比同龄人更能吃苦，这是真的。'
+        '三甲医院：通常要求较高学历、科研经历与临床能力，聘期考核压力较大。',
+        '二甲 / 县医院：有编制岗位，平台与资源不同。',
+        '私立 / 民营：看重职称、口碑与服务。',
+        '药企、器械、保险、互联网医疗、医疗 AI：医学背景的常见去向。',
+        '公务员 / 事业单位：卫健委、疾控、医保局等。',
+        '继续深造：硕士、博士、博士后。'
       ],
-      callout: '“学医的转行，做什么都行。”——这句话是夸奖，也是心酸。'
+      callout: '不同路径各有特点，适合自己的才是最好的。'
     },
     {
-      no: '07', title: '如果你已经报了', intro: '如果你已经在这条路上，下面这些话不是劝退，是止损。',
+      no: '07', title: '给已经选择的你', intro: '如果你已经在这条路上，下面是一些经验性的建议。',
       list: [
-        '规培证是底线，先拿到它。',
-        '身体第一。学会拒绝，学会请假，学会在扛不住的时候说出来。',
-        '尽早规划：科研、学历、转行，越早准备越便宜。',
-        '存钱，买保险，别把全部希望押在“留院”上。',
-        '如果出现持续失眠、情绪低落、兴趣丧失，去看心理科。医生也可以生病。',
-        '转行不丢人。你学到的知识不会白费，只是换一种方式使用。'
+        '规培证是重要基础，先顺利完成培训。',
+        '身体第一。学会拒绝与请假，及时就医。',
+        '尽早规划：科研、学历、职业方向。',
+        '存钱、买保险，给自己留余地。',
+        '持续失眠、情绪低落、兴趣丧失时，寻求专业帮助。',
+        '如果发现不适合，调整方向并不可耻。'
       ],
-      callout: '离开不是失败。在一个不适合你的系统里耗到 35 岁，才是。'
+      callout: '照顾好自己，比任何一条单一路径都重要。'
     }
   ]
 };
@@ -2021,7 +2021,7 @@ window.GAME_DATA = {
         '<span class="major-meta"><i>' + m.years + '</i><i>' + m.salary + '</i><i>' + m.note + '</i></span>' +
         (m.badge ? '<span class="major-note">' + m.badge + '</span>' : '') +
         '</span>' +
-        '<span class="major-right"><span class="major-quit">' + m.quit + '<small>劝退指数</small></span></span>' +
+        '<span class="major-right"><span class="major-quit">' + m.quit + '<small>参考指数</small></span></span>' +
         '</button>';
     }).join('');
     setHTML('major-list', html);
@@ -2668,7 +2668,7 @@ window.GAME_DATA = {
     refreshContinue();
   }
 
-  /* ---------------- 劝退报告 ---------------- */
+  /* ---------------- 学医参考 ---------------- */
   function renderReport() {
     var html = D.report.map(function (b) {
       var table = '';
@@ -2813,7 +2813,7 @@ window.GAME_DATA = {
     x.fillStyle = '#b9a4a4'; x.font = '400 20px "Noto Serif SC","SimSun",serif';
     x.fillText(endingData.quote, 420, 1258, 560);
     x.fillStyle = '#637976'; x.font = '400 16px Consolas, monospace';
-    x.fillText('劝人学医，天打雷劈。  /  ' + formatDate(Math.max(1, S.month)), 92, 1350);
+    x.fillText('学医之前，先把路看清。  /  ' + formatDate(Math.max(1, S.month)), 92, 1350);
 
     var blob = await new Promise(function (resolve) { c.toBlob(resolve, 'image/png'); });
     if (!blob) { toast('生成失败，请重试。', 'down'); return; }
