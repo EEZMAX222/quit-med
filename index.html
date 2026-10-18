@@ -1,0 +1,3031 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#070b0c" />
+<title>劝人学医 · 临床医学劝退模拟器</title>
+<meta name="description" content="一款关于医学生规培生存的黑色幽默文字游戏。在把青春押给临床医学之前，先看看代价。" />
+<meta name="robots" content="index,follow" />
+<link rel="canonical" href="https://eezmax222.github.io/quit-med/" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="zh_CN" />
+<meta property="og:site_name" content="劝人学医" />
+<meta property="og:title" content="劝人学医 · 临床医学劝退模拟器" />
+<meta property="og:description" content="一款关于医学生规培生存的黑色幽默文字游戏。在把青春押给临床医学之前，先看看代价。" />
+<meta property="og:url" content="https://eezmax222.github.io/quit-med/" />
+<meta property="og:image" content="https://eezmax222.github.io/quit-med/og.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="劝人学医 · 临床医学劝退模拟器" />
+<meta name="twitter:description" content="在把青春押给临床医学之前，先看看代价。" />
+<meta name="twitter:image" content="https://eezmax222.github.io/quit-med/og.png" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23070b0c'/%3E%3Cpath d='M10 34h10l5-14 8 26 6-18 5 6h10' fill='none' stroke='%234fd1c5' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+<link rel="apple-touch-icon" href="icon-192.png" />
+<link rel="manifest" href="manifest.webmanifest" />
+<style>
+/* ============================================================
+   劝人学医 — 临床医学劝退模拟器
+   ============================================================ */
+:root {
+  --bg: #070b0c;
+  --bg-2: #0a1113;
+  --panel: rgba(13, 22, 24, 0.84);
+  --panel-solid: #0d1618;
+  --line: rgba(122, 178, 172, 0.16);
+  --line-strong: rgba(122, 178, 172, 0.32);
+  --ink: #e8f0ed;
+  --muted: #8ea3a0;
+  --muted-2: #637976;
+  --teal: #4fd1c5;
+  --teal-deep: #2a8f86;
+  --red: #e5484d;
+  --red-deep: #8f1f24;
+  --amber: #f0b429;
+  --violet: #a78bfa;
+  --green: #4ade80;
+  --pink: #f472b6;
+  --font-serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "STSong", "SimSun", serif;
+  --font-sans: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+  --shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+html, body { margin: 0; padding: 0; }
+body {
+  min-height: 100vh;
+  color: var(--ink);
+  background:
+    radial-gradient(1100px 720px at 72% -8%, rgba(38, 106, 100, 0.24), transparent 62%),
+    radial-gradient(900px 620px at 4% 108%, rgba(112, 20, 26, 0.2), transparent 60%),
+    linear-gradient(180deg, #080d0e 0%, #060a0b 100%);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+body::before {
+  content: "";
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(120, 180, 175, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(120, 180, 175, 0.035) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse at center, #000 30%, transparent 78%);
+  pointer-events: none; z-index: 0;
+}
+button { font: inherit; color: inherit; }
+button:focus-visible, a:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+::selection { background: rgba(79, 209, 197, 0.3); color: #fff; }
+
+#ecg-bg {
+  position: fixed; inset: 0; width: 100%; height: 100%;
+  z-index: 0; pointer-events: none; opacity: 0.5;
+}
+.grain {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+}
+.vignette { position: fixed; inset: 0; z-index: 1; pointer-events: none; box-shadow: inset 0 0 220px 60px rgba(0,0,0,.75); }
+
+/* ---------- chrome ---------- */
+.chrome {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 60;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px clamp(16px, 3.2vw, 34px);
+  background: linear-gradient(180deg, rgba(6, 10, 11, 0.88), rgba(6, 10, 11, 0));
+  backdrop-filter: blur(4px);
+  pointer-events: none;
+}
+.chrome > * { pointer-events: auto; }
+.brand {
+  display: flex; align-items: center; gap: 10px;
+  background: none; border: 0; cursor: pointer; padding: 4px;
+}
+.brand-mark {
+  width: 30px; height: 30px; border: 1px solid var(--line-strong); border-radius: 50%;
+  display: grid; place-items: center; position: relative;
+}
+.brand-mark::before {
+  content: ""; width: 20px; height: 1px; background: var(--teal);
+  position: absolute; transform: rotate(-24deg); opacity: .7;
+}
+.brand-mark i {
+  width: 5px; height: 5px; border-radius: 50%; background: var(--red);
+  box-shadow: 0 0 12px var(--red); animation: beat 1.4s infinite;
+}
+.brand-text { display: flex; flex-direction: column; line-height: 1.1; text-align: left; font-family: var(--font-serif); font-size: 15px; letter-spacing: .12em; }
+.brand-text em { font-family: var(--font-mono); font-style: normal; font-size: 8px; color: var(--muted-2); letter-spacing: .34em; margin-top: 3px; }
+.chrome-actions { display: flex; gap: 8px; }
+.chip-btn {
+  background: rgba(13, 22, 24, 0.6); border: 1px solid var(--line);
+  color: var(--muted); font-size: 12px; letter-spacing: .1em;
+  padding: 7px 12px; border-radius: 2px; cursor: pointer; transition: .2s;
+}
+.chip-btn:hover { color: var(--ink); border-color: var(--line-strong); }
+.chip-btn[aria-pressed="false"] { opacity: .55; }
+
+/* ---------- screens ---------- */
+.screen { display: none; position: relative; z-index: 2; min-height: 100vh; }
+.screen.active { display: block; animation: screenIn .5s ease both; }
+@keyframes screenIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+/* ---------- shared ---------- */
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 9px;
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: .26em;
+  color: var(--teal); text-transform: uppercase;
+}
+.live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--red); box-shadow: 0 0 0 0 rgba(229,72,77,.6); animation: pulse 2s infinite; }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(229,72,77,.55); } 70% { box-shadow: 0 0 0 9px rgba(229,72,77,0); } 100% { box-shadow: 0 0 0 0 rgba(229,72,77,0); } }
+@keyframes beat { 0%, 100% { transform: scale(1); opacity: 1; } 12% { transform: scale(1.7); } 24% { transform: scale(1); } 36% { transform: scale(1.35); } }
+.hl { color: var(--red); }
+.hidden { display: none !important; }
+
+.btn {
+  position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 14px 26px; min-height: 48px; border: 1px solid var(--line-strong);
+  background: transparent; color: var(--ink); cursor: pointer;
+  font-size: 14px; letter-spacing: .14em; border-radius: 2px;
+  transition: transform .18s, background .18s, border-color .18s, color .18s, box-shadow .18s;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn.primary { background: var(--teal); border-color: var(--teal); color: #04100e; font-weight: 700; }
+.btn.primary:hover { background: #6ee7db; box-shadow: 0 0 36px rgba(79, 209, 197, 0.32); }
+.btn.ghost:hover { border-color: var(--teal); color: var(--teal); }
+.btn.link { border-color: transparent; background: none; color: var(--muted); padding-left: 6px; padding-right: 6px; }
+.btn.link:hover { color: var(--teal); }
+.btn.small { padding: 9px 16px; min-height: 38px; font-size: 12px; }
+.btn:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+
+/* ============================================================
+   TITLE
+   ============================================================ */
+#s-title { display: none; flex-direction: column; min-height: 100vh; padding: 96px clamp(20px, 5vw, 64px) 0; }
+#s-title.active { display: flex; }
+.title-wrap { position: relative; width: min(1080px, 100%); margin: auto; padding-bottom: 40px; }
+.title-wrap > * { animation: rise .7s cubic-bezier(.2,.7,.2,1) both; }
+.title-wrap > *:nth-child(2) { animation-delay: .06s; }
+.title-wrap > *:nth-child(3) { animation-delay: .12s; }
+.title-wrap > *:nth-child(4) { animation-delay: .18s; }
+.title-wrap > *:nth-child(5) { animation-delay: .24s; }
+.title-wrap > *:nth-child(6) { animation-delay: .3s; }
+@keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+
+.mega {
+  margin: 22px 0 16px; font-family: var(--font-serif); font-weight: 900;
+  font-size: clamp(64px, 12.5vw, 148px); line-height: .94; letter-spacing: .04em;
+  display: flex; align-items: flex-start; gap: clamp(10px, 2vw, 26px);
+  text-shadow: 0 8px 60px rgba(0,0,0,.7);
+}
+.seal {
+  flex: 0 0 auto; margin-top: clamp(6px, 1.2vw, 16px);
+  display: inline-grid; place-items: center;
+  width: clamp(48px, 7vw, 82px); height: clamp(48px, 7vw, 82px);
+  border: 2px solid var(--red); color: var(--red);
+  font-family: var(--font-serif); font-size: clamp(15px, 2.1vw, 24px); font-weight: 700;
+  letter-spacing: .08em; line-height: 1; transform: rotate(6deg);
+  box-shadow: inset 0 0 18px rgba(229,72,77,.16);
+}
+.title-sub {
+  margin: 0 0 26px; font-family: var(--font-serif); font-size: clamp(20px, 2.8vw, 34px);
+  line-height: 1.6; color: #c6d5d1; letter-spacing: .04em;
+}
+.title-desc { margin: 0 0 34px; font-size: 14px; line-height: 2; color: var(--muted); letter-spacing: .06em; }
+.title-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+.title-meta { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 10px; font-family: var(--font-mono); font-size: 10px; letter-spacing: .18em; color: var(--muted-2); }
+.ticker { position: relative; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); overflow: hidden; padding: 11px 0; background: rgba(6,10,11,.5); }
+.ticker-track { display: flex; gap: 28px; width: max-content; animation: ticker 48s linear infinite; font-family: var(--font-serif); font-size: 12px; color: var(--muted-2); letter-spacing: .08em; white-space: nowrap; }
+.tick-sep { color: var(--red-deep); }
+@keyframes ticker { to { transform: translateX(-50%); } }
+.title-foot { padding: 14px 0 22px; font-size: 10px; color: var(--muted-2); text-align: center; letter-spacing: .08em; }
+
+/* ============================================================
+   APPLY
+   ============================================================ */
+#s-apply { padding: 100px clamp(18px, 4vw, 48px) 60px; }
+.apply-wrap { width: min(940px, 100%); margin: 0 auto; }
+.form-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; border-bottom: 1px solid var(--line-strong); padding-bottom: 18px; }
+.form-kicker { font-family: var(--font-mono); font-size: 10px; letter-spacing: .24em; color: var(--teal); margin-bottom: 8px; }
+.form-title { font-family: var(--font-serif); font-size: clamp(26px, 4vw, 40px); letter-spacing: .06em; }
+.form-id { display: flex; gap: 18px; font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+.form-id b { color: var(--ink); font-weight: 500; }
+.form-quotes { display: grid; gap: 6px; margin: 20px 0 26px; padding: 16px 18px; border-left: 2px solid var(--red-deep); background: rgba(229,72,77,.04); font-family: var(--font-serif); font-size: 13px; line-height: 1.9; color: #b9c9c5; }
+.form-quotes span { display: inline-block; min-width: 76px; color: var(--muted-2); font-family: var(--font-sans); font-size: 11px; letter-spacing: .14em; margin-right: 8px; }
+.major-list { display: grid; gap: 10px; }
+.major {
+  position: relative; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 18px;
+  padding: 18px 20px; border: 1px solid var(--line); background: rgba(13,22,24,.55);
+  cursor: pointer; text-align: left; transition: .2s; overflow: hidden;
+}
+.major:hover { border-color: var(--line-strong); background: rgba(19,32,34,.8); transform: translateX(3px); }
+.major-index { font-family: var(--font-mono); font-size: 11px; color: var(--muted-2); }
+.major-name { font-family: var(--font-serif); font-size: 20px; letter-spacing: .06em; margin-bottom: 4px; }
+.major-meta { font-size: 11px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 12px; }
+.major-meta i { font-style: normal; color: var(--muted-2); }
+.major-badge { font-family: var(--font-mono); font-size: 10px; letter-spacing: .14em; color: var(--amber); border: 1px solid rgba(240,180,41,.35); padding: 3px 7px; }
+.major-right { text-align: right; }
+.major-quit { font-family: var(--font-serif); font-size: 22px; color: var(--red); }
+.major-quit small { display: block; font-family: var(--font-sans); font-size: 9px; letter-spacing: .18em; color: var(--muted-2); margin-top: 2px; }
+.major.clinical { border-color: rgba(229,72,77,.38); background: linear-gradient(90deg, rgba(80,18,22,.32), rgba(13,22,24,.55) 60%); }
+.major.clinical::after { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--red); box-shadow: 0 0 16px var(--red); }
+.major.clinical .major-name { color: #ffd9d9; }
+.major.clinical:hover { border-color: rgba(229,72,77,.7); }
+.major-note { font-size: 11px; color: var(--amber); margin-top: 4px; opacity: .9; }
+.form-foot { margin-top: 24px; padding: 14px 16px; border: 1px dashed var(--line); font-size: 12px; color: var(--muted); line-height: 1.8; }
+.warn-mark { display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; border: 1px solid var(--red); color: var(--red); font-family: var(--font-mono); font-size: 11px; margin-right: 6px; }
+.back-link { margin-top: 26px; }
+
+/* ============================================================
+   UNDERGRAD
+   ============================================================ */
+#s-undergrad { padding: 108px clamp(18px, 4vw, 48px) 60px; }
+.ug-wrap { width: min(1040px, 100%); margin: 0 auto; display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: clamp(30px, 6vw, 80px); }
+.ug-side { border-right: 1px solid var(--line); padding-right: 24px; }
+.ug-progress { display: grid; gap: 14px; }
+.ug-step { display: flex; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em; color: var(--muted-2); }
+.ug-step i { width: 18px; height: 18px; border: 1px solid var(--line); border-radius: 50%; display: grid; place-items: center; font-style: normal; font-size: 8px; }
+.ug-step.done { color: var(--teal); }
+.ug-step.done i { border-color: var(--teal); background: rgba(79,209,197,.12); }
+.ug-step.now { color: var(--ink); }
+.ug-step.now i { border-color: var(--red); color: var(--red); box-shadow: 0 0 12px rgba(229,72,77,.3); }
+.ug-ledger { margin-top: 40px; display: grid; gap: 8px; font-family: var(--font-mono); font-size: 10px; color: var(--muted-2); }
+.ug-ledger div { display: flex; justify-content: space-between; border-bottom: 1px dotted rgba(122,178,172,.12); padding-bottom: 5px; }
+.ug-ledger b { font-weight: 500; color: var(--muted); }
+.ug-kicker { font-family: var(--font-mono); font-size: 10px; letter-spacing: .3em; color: var(--red); }
+.ug-title { margin: 14px 0 22px; font-family: var(--font-serif); font-size: clamp(28px, 4vw, 42px); letter-spacing: .05em; font-weight: 700; }
+.ug-body { font-family: var(--font-serif); font-size: 15px; line-height: 2.15; color: #c3d1cd; letter-spacing: .02em; }
+.ug-body p { margin: 0 0 16px; }
+.ug-body .ug-note { font-family: var(--font-sans); font-size: 11px; color: var(--muted-2); letter-spacing: .08em; border-left: 2px solid var(--line); padding-left: 12px; }
+.ug-choices { display: grid; gap: 10px; margin-top: 28px; }
+.ug-choice {
+  display: grid; grid-template-columns: 26px 1fr auto; gap: 14px; align-items: center;
+  padding: 16px 18px; border: 1px solid var(--line); background: rgba(13,22,24,.5);
+  cursor: pointer; text-align: left; transition: .2s;
+}
+.ug-choice:hover { border-color: var(--teal); background: rgba(18,34,34,.75); transform: translateX(3px); }
+.ug-choice-no { font-family: var(--font-mono); font-size: 10px; color: var(--muted-2); }
+.ug-choice-text { font-family: var(--font-serif); font-size: 15px; letter-spacing: .04em; }
+.ug-choice-hint { font-family: var(--font-mono); font-size: 9px; color: var(--muted-2); letter-spacing: .08em; text-align: right; }
+.ug-next { margin-top: 26px; display: flex; align-items: center; gap: 18px; }
+.ug-result { margin-top: 26px; padding: 18px 20px; border-left: 2px solid var(--teal); background: rgba(79,209,197,.05); font-family: var(--font-serif); font-size: 14px; line-height: 2; color: #cfe0dc; }
+.ug-deltas { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; font-family: var(--font-mono); font-size: 10px; }
+.ug-deltas span { border: 1px solid var(--line); padding: 2px 6px; }
+
+/* ============================================================
+   GAME
+   ============================================================ */
+#s-game { padding: 92px clamp(14px, 3vw, 40px) 50px; }
+.gamewrap { width: min(1260px, 100%); margin: 0 auto; }
+.game-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+.clock { font-family: var(--font-mono); font-size: clamp(22px, 3vw, 32px); letter-spacing: .06em; color: var(--ink); }
+.clock-sub { margin-top: 6px; font-family: var(--font-mono); font-size: 10px; letter-spacing: .18em; color: var(--muted); }
+.dept-block { display: flex; align-items: center; gap: 12px; max-width: 56%; text-align: right; padding: 7px 10px; border: 1px solid var(--line); background: rgba(13,22,24,.42); }
+.dept-icon { width: 42px; height: 42px; flex: 0 0 auto; display: grid; place-items: center; border: 1px solid var(--line); font-size: 20px; background: rgba(13,22,24,.7); }
+.dept-name { font-family: var(--font-serif); font-size: 16px; letter-spacing: .08em; }
+.dept-quote { margin-top: 3px; font-size: 10px; color: var(--muted-2); line-height: 1.5; max-width: 300px; }
+
+.hud { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; margin: 14px 0 18px; }
+.stat { --accent: var(--teal); position: relative; padding: 10px 12px 9px; border: 1px solid var(--line); background: rgba(11,19,21,.72); overflow: hidden; }
+.stat::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--accent); opacity: .75; }
+.stat-top { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; }
+.stat-label { font-size: 10px; letter-spacing: .14em; color: var(--muted); }
+.stat-val { font-family: var(--font-mono); font-size: 18px; color: var(--ink); line-height: 1; }
+.stat-bar { height: 3px; margin-top: 8px; background: rgba(255,255,255,.06); overflow: hidden; }
+.stat-bar i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .6s cubic-bezier(.2,.8,.2,1); box-shadow: 0 0 10px var(--accent); }
+.stat.low .stat-val { color: var(--red); animation: danger 1.2s infinite; }
+@keyframes danger { 50% { opacity: .45; } }
+.stat.money .stat-val { font-size: 16px; color: var(--green); }
+.stat.money.low .stat-val { color: var(--red); }
+
+.game-body { display: grid; grid-template-columns: minmax(0, 1fr) 318px; gap: 18px; align-items: start; }
+.game-main { min-width: 0; }
+.month-card {
+  position: relative; padding: 16px 18px; border: 1px solid var(--line);
+  background: linear-gradient(90deg, rgba(20,36,37,.72), rgba(11,19,21,.4));
+  font-family: var(--font-serif); font-size: 13px; line-height: 1.9; color: #c3d1cd;
+}
+.month-card::before { content: "本月"; position: absolute; right: 14px; top: -8px; font-family: var(--font-mono); font-size: 9px; letter-spacing: .2em; color: var(--muted-2); background: var(--bg); padding: 0 6px; }
+.month-card .mc-title { color: var(--ink); font-size: 15px; letter-spacing: .04em; margin-bottom: 4px; }
+.month-card .mc-sub { font-family: var(--font-sans); font-size: 11px; color: var(--muted-2); margin-top: 6px; }
+.section-label { display: flex; align-items: center; gap: 12px; margin: 20px 0 10px; font-family: var(--font-mono); font-size: 10px; letter-spacing: .22em; color: var(--muted); }
+.section-label i { flex: 1; height: 1px; background: var(--line); }
+.actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.action {
+  --accent: var(--teal); position: relative; display: flex; flex-direction: column; gap: 8px;
+  padding: 16px 16px 14px 52px; min-height: 106px;
+  border: 1px solid var(--line); background: rgba(13,22,24,.55); cursor: pointer; text-align: left;
+  transition: transform .16s, border-color .16s, background .16s, box-shadow .16s;
+  overflow: hidden;
+}
+.action::after {
+  content: ""; position: absolute; inset: 0; background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 9%, transparent), transparent 55%);
+  opacity: 0; transition: opacity .2s; pointer-events: none;
+}
+.action:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--accent) 55%, transparent); box-shadow: 0 12px 34px rgba(0,0,0,.35); }
+.action:hover::after { opacity: 1; }
+.action:active { transform: translateY(0); }
+.action-icon { position: absolute; left: 16px; top: 16px; width: 24px; height: 24px; display: grid; place-items: center; font-size: 18px; }
+.action-name { font-family: var(--font-serif); font-size: 17px; letter-spacing: .06em; color: var(--ink); }
+.action-sub { font-size: 10px; color: var(--muted-2); letter-spacing: .08em; margin-top: -4px; }
+.action-desc { font-size: 11px; line-height: 1.7; color: var(--muted); }
+.action-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; }
+.chip { font-family: var(--font-mono); font-size: 9px; letter-spacing: .04em; padding: 2px 6px; border: 1px solid var(--line); color: var(--muted); }
+.chip.good { color: var(--teal); border-color: rgba(79,209,197,.28); }
+.chip.bad { color: var(--red); border-color: rgba(229,72,77,.28); }
+.chip.money { color: var(--green); border-color: rgba(74,222,128,.25); }
+.action-key { position: absolute; right: 9px; top: 8px; font-family: var(--font-mono); font-size: 9px; color: var(--muted-2); border: 1px solid var(--line); width: 16px; height: 16px; display: grid; place-items: center; }
+.action.disabled { opacity: .42; cursor: not-allowed; filter: grayscale(.5); }
+.action.disabled:hover { transform: none; border-color: var(--line); box-shadow: none; }
+.action.disabled .action-key { display: none; }
+.action.family { --accent: var(--amber); }
+
+.game-links { display: flex; flex-wrap: wrap; gap: 22px; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); }
+.txt-link { background: none; border: 0; padding: 0; color: var(--muted-2); font-size: 11px; letter-spacing: .1em; cursor: pointer; border-bottom: 1px dotted transparent; }
+.txt-link:hover { color: var(--teal); border-bottom-color: var(--teal); }
+.txt-link.danger:hover { color: var(--red); border-bottom-color: var(--red); }
+
+.game-side { display: grid; gap: 10px; position: sticky; top: 86px; }
+.side-card { border: 1px solid var(--line); background: rgba(11,19,21,.66); padding: 13px 14px; }
+.side-head { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--font-mono); font-size: 9px; letter-spacing: .2em; color: var(--muted); margin-bottom: 10px; }
+.side-head b { font-size: 11px; color: var(--muted-2); font-weight: 400; }
+.ideal-bar { height: 4px; background: rgba(255,255,255,.06); margin-bottom: 8px; }
+.ideal-bar i { display: block; height: 100%; width: 100%; background: linear-gradient(90deg, #60a5fa, #a78bfa); transition: width .7s; }
+.ideal-card p { margin: 0; font-family: var(--font-serif); font-size: 11px; color: var(--muted); line-height: 1.7; }
+.log-card { min-height: 200px; }
+.log { max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 7px; padding-right: 4px; scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent; }
+.log::-webkit-scrollbar { width: 3px; }
+.log::-webkit-scrollbar-thumb { background: var(--line-strong); }
+.log-item { font-size: 11px; line-height: 1.75; color: #a9bbb7; padding-left: 9px; border-left: 1px solid var(--line); }
+.log-item b { display: block; font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .1em; color: #6f8783; font-weight: 400; margin-bottom: 2px; }
+.log-item.hot { border-left-color: var(--red-deep); color: #d8b4b4; }
+.log-item.good { border-left-color: var(--teal-deep); }
+.tips-card p { margin: 0; font-size: 10px; line-height: 1.8; color: var(--muted-2); }
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+.modal-root { position: fixed; inset: 0; z-index: 100; display: none; align-items: center; justify-content: center; padding: 18px; }
+.modal-root.open { display: flex; }
+.modal-backdrop { position: absolute; inset: 0; background: rgba(2, 6, 7, 0.78); backdrop-filter: blur(7px); animation: fade .25s both; }
+@keyframes fade { from { opacity: 0; } }
+.modal-panel {
+  position: relative; width: min(640px, 100%); max-height: 88vh; overflow-y: auto;
+  background: linear-gradient(180deg, #101b1d, #0a1214);
+  border: 1px solid var(--line-strong); box-shadow: var(--shadow);
+  padding: 30px clamp(20px, 4vw, 38px) 26px;
+  animation: pop .28s cubic-bezier(.2,.8,.2,1) both;
+  scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent;
+}
+.modal-panel::before { content: ""; position: absolute; left: 0; top: 0; width: 2px; height: 64px; background: var(--teal); }
+@keyframes pop { from { opacity: 0; transform: translateY(14px) scale(.985); } }
+.modal-kicker { font-family: var(--font-mono); font-size: 9px; letter-spacing: .28em; color: var(--teal); margin-bottom: 10px; }
+.modal-title { margin: 0 0 16px; font-family: var(--font-serif); font-size: clamp(24px, 4vw, 32px); letter-spacing: .04em; line-height: 1.35; font-weight: 700; }
+.modal-body { font-family: var(--font-serif); font-size: 14.5px; line-height: 2.05; color: #c8d6d2; }
+.modal-body p { margin: 0 0 13px; }
+.modal-body p:last-child { margin-bottom: 0; }
+.modal-body .quiet { font-family: var(--font-sans); font-size: 11px; color: var(--muted-2); line-height: 1.9; letter-spacing: .04em; }
+.modal-body .warn { color: #f2b8b8; }
+.modal-body .big-num { font-family: var(--font-mono); color: var(--red); font-size: 30px; }
+.modal-choices { display: grid; gap: 9px; margin-top: 24px; }
+.choice {
+  display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 12px;
+  width: 100%; padding: 14px 16px; border: 1px solid var(--line); background: rgba(19,32,34,.5);
+  cursor: pointer; text-align: left; transition: .18s;
+}
+.choice:hover { border-color: var(--teal); background: rgba(26,48,48,.65); transform: translateX(2px); }
+.choice-main { font-family: var(--font-serif); font-size: 15px; letter-spacing: .04em; }
+.choice-hint { font-family: var(--font-mono); font-size: 9px; color: var(--muted-2); letter-spacing: .04em; text-align: right; max-width: 180px; line-height: 1.5; }
+.choice.danger:hover { border-color: var(--red); background: rgba(60,18,20,.5); }
+.choice.primary { border-color: rgba(79,209,197,.4); }
+.choice[disabled] { opacity: .5; pointer-events: none; }
+.modal-hint { margin-top: 10px; text-align: right; font-family: var(--font-mono); font-size: 9px; letter-spacing: .08em; color: var(--muted-2); }
+.delta-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); }
+.delta { font-family: var(--font-mono); font-size: 10px; letter-spacing: .04em; padding: 3px 7px; border: 1px solid var(--line); }
+.delta.up { color: var(--teal); border-color: rgba(79,209,197,.3); }
+.delta.down { color: var(--red); border-color: rgba(229,72,77,.3); }
+.delta.money-up { color: var(--green); border-color: rgba(74,222,128,.3); }
+.delta.money-down { color: var(--amber); border-color: rgba(240,180,41,.3); }
+
+/* exam */
+.exam-score { display: flex; align-items: center; gap: 22px; margin: 20px 0 6px; }
+.exam-num { font-family: var(--font-mono); font-size: 58px; line-height: 1; color: var(--teal); }
+.exam-num.fail { color: var(--red); }
+.exam-info { font-size: 11px; line-height: 1.8; color: var(--muted); }
+.exam-stamp { display: inline-block; margin: 18px 0 0; padding: 8px 18px; border: 2px solid var(--teal); color: var(--teal); font-family: var(--font-serif); font-size: 20px; letter-spacing: .28em; transform: rotate(-3deg); }
+.exam-stamp.fail { border-color: var(--red); color: var(--red); }
+
+/* ============================================================
+   ENDING
+   ============================================================ */
+#s-ending { padding: 110px clamp(18px, 4vw, 48px) 70px; }
+.ending-wrap { width: min(860px, 100%); margin: 0 auto; }
+.ending-kicker { font-family: var(--font-mono); font-size: 10px; letter-spacing: .3em; color: var(--red); }
+.ending-title { margin: 16px 0 12px; font-family: var(--font-serif); font-size: clamp(38px, 7vw, 64px); line-height: 1.18; letter-spacing: .04em; font-weight: 900; }
+.ending-sub { margin: 0; font-family: var(--font-serif); font-size: 15px; color: var(--muted); letter-spacing: .06em; }
+.ending-rule { height: 1px; background: var(--line); margin: 26px 0; position: relative; }
+.ending-rule i { position: absolute; left: 0; top: -1px; width: 80px; height: 2px; background: var(--red); box-shadow: 0 0 18px var(--red); }
+.ending-body { font-family: var(--font-serif); font-size: 16px; line-height: 2.25; color: #cbd9d5; letter-spacing: .02em; }
+.ending-body p { margin: 0 0 15px; }
+.ending-body .extra { color: #9fb2ae; font-size: 14px; line-height: 1.9; border-left: 2px solid var(--line-strong); padding-left: 14px; margin-top: 20px; }
+
+.ending-quote { margin: 24px 0 0; padding: 16px 0 16px 20px; border-left: 2px solid var(--red-deep); font-family: var(--font-serif); font-size: 14px; line-height: 1.9; color: #b9a4a4; font-style: normal; }
+.ending-stats { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin: 34px 0 8px; }
+.es { border: 1px solid var(--line); padding: 10px 11px; background: rgba(11,19,21,.6); }
+.es span { display: block; font-size: 9px; letter-spacing: .14em; color: var(--muted-2); }
+.es b { display: block; margin-top: 5px; font-family: var(--font-mono); font-size: 17px; font-weight: 500; color: var(--ink); }
+.es.bad b { color: var(--red); }
+.ending-ledger { margin: 10px 0 0; font-family: var(--font-mono); font-size: 10px; letter-spacing: .08em; color: var(--muted-2); line-height: 1.8; }
+.compare { margin-top: 30px; border: 1px solid var(--line); }
+.compare-head { display: grid; grid-template-columns: 74px 1fr 1fr; gap: 10px; padding: 10px 14px; background: rgba(19,32,34,.6); font-family: var(--font-mono); font-size: 9px; letter-spacing: .16em; color: var(--muted); }
+.compare-row { display: grid; grid-template-columns: 74px 1fr 1fr; gap: 10px; padding: 9px 14px; border-top: 1px solid rgba(122,178,172,.08); font-size: 11px; line-height: 1.6; }
+.compare-row .age { font-family: var(--font-mono); color: var(--muted-2); }
+.compare-row .you { color: #e3b6b6; }
+.compare-row .them { color: var(--muted); }
+.compare-note { padding: 10px 14px; border-top: 1px solid var(--line); font-size: 10px; color: var(--muted-2); line-height: 1.8; }
+.ending-score { margin: 36px 0 30px; text-align: center; padding: 26px 10px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.score-num { font-family: var(--font-mono); font-size: clamp(56px, 10vw, 92px); line-height: 1; color: var(--red); text-shadow: 0 0 44px rgba(229,72,77,.35); }
+.score-label { margin-top: 8px; font-family: var(--font-mono); font-size: 10px; letter-spacing: .5em; color: var(--muted); }
+.score-note { margin-top: 10px; font-size: 11px; color: var(--muted-2); }
+.ending-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.ending-foot { margin-top: 34px; text-align: center; font-size: 10px; color: var(--muted-2); letter-spacing: .06em; line-height: 1.8; }
+
+/* ============================================================
+   ALT
+   ============================================================ */
+#s-alt { padding: 108px clamp(18px, 4vw, 48px) 60px; }
+.alt-wrap { width: min(820px, 100%); margin: 0 auto; }
+.alt-emoji { font-size: 52px; line-height: 1; filter: grayscale(.2); }
+.alt-kicker { margin-top: 22px; font-family: var(--font-mono); font-size: 10px; letter-spacing: .3em; color: var(--teal); }
+.alt-title { margin: 14px 0 18px; font-family: var(--font-serif); font-size: clamp(34px, 6vw, 54px); letter-spacing: .04em; }
+.alt-body { font-family: var(--font-serif); font-size: 15px; line-height: 2.1; color: #c3d1cd; }
+.alt-body p { margin: 0 0 14px; }
+.alt-costs { margin: 24px 0; padding: 18px 20px; border-left: 2px solid var(--amber); background: rgba(240,180,41,.04); }
+.alt-costs h4 { margin: 0 0 8px; font-family: var(--font-mono); font-size: 10px; letter-spacing: .2em; color: var(--amber); font-weight: 400; }
+.alt-costs ul { margin: 0; padding-left: 18px; font-size: 12px; line-height: 1.9; color: var(--muted); }
+.alt-quote { margin: 22px 0 28px; font-family: var(--font-serif); font-size: 14px; color: #b9a4a4; padding-left: 18px; border-left: 2px solid var(--red-deep); line-height: 1.9; }
+.alt-foot { margin-top: 34px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted); line-height: 1.9; }
+.alt-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+
+/* ============================================================
+   REPORT
+   ============================================================ */
+#s-report { padding: 100px clamp(18px, 4vw, 48px) 70px; }
+.report-wrap { width: min(860px, 100%); margin: 0 auto; }
+.report-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
+.report-stamp { border: 2px solid var(--red); color: var(--red); padding: 8px 12px; font-family: var(--font-serif); font-size: 13px; letter-spacing: .16em; line-height: 1.4; text-align: center; transform: rotate(3deg); opacity: .85; }
+.report-stamp em { font-family: var(--font-mono); font-style: normal; font-size: 8px; letter-spacing: .14em; }
+.report-head { margin: 34px 0 40px; }
+.report-head h2 { margin: 14px 0 16px; font-family: var(--font-serif); font-size: clamp(30px, 5vw, 48px); line-height: 1.35; letter-spacing: .03em; }
+.report-head p { margin: 0; font-size: 12px; line-height: 2; color: var(--muted); }
+.report-block { margin-bottom: 38px; }
+.report-block h3 { display: flex; align-items: baseline; gap: 12px; margin: 0 0 14px; font-family: var(--font-serif); font-size: 22px; letter-spacing: .06em; }
+.report-block h3 .no { font-family: var(--font-mono); font-size: 10px; color: var(--red); letter-spacing: .1em; }
+.report-block p { margin: 0 0 12px; font-size: 13px; line-height: 2; color: #bccbc7; }
+.report-block ul { margin: 0 0 14px; padding: 0; list-style: none; display: grid; gap: 8px; }
+.report-block li { position: relative; padding-left: 18px; font-size: 12.5px; line-height: 1.9; color: #b3c3bf; }
+.report-block li::before { content: ""; position: absolute; left: 0; top: 10px; width: 6px; height: 1px; background: var(--teal-deep); }
+.report-table { width: 100%; border-collapse: collapse; margin: 14px 0 18px; font-size: 12px; }
+.report-table th, .report-table td { border: 1px solid var(--line); padding: 9px 12px; text-align: left; line-height: 1.7; }
+.report-table th { background: rgba(19,32,34,.6); color: var(--muted); font-weight: 400; font-family: var(--font-mono); font-size: 9px; letter-spacing: .14em; }
+.report-table td:first-child { font-family: var(--font-mono); color: var(--muted); white-space: nowrap; }
+.report-callout { margin: 18px 0; padding: 16px 18px; border: 1px solid rgba(229,72,77,.28); background: rgba(80,18,22,.18); font-family: var(--font-serif); font-size: 14px; line-height: 1.9; color: #e6c3c3; }
+.report-callout b { color: var(--red); }
+.report-end { margin-top: 50px; padding-top: 30px; border-top: 1px solid var(--line-strong); }
+.report-end h3 { margin: 0 0 16px; font-family: var(--font-serif); font-size: 26px; letter-spacing: .08em; }
+.report-end p { margin: 0 0 14px; font-family: var(--font-serif); font-size: 14px; line-height: 2.1; color: #c3d1cd; }
+.report-small { font-family: var(--font-sans) !important; font-size: 10px !important; color: var(--muted-2) !important; line-height: 1.9 !important; }
+#btn-report-cta { margin-top: 20px; }
+
+/* ============================================================
+   TOASTS
+   ============================================================ */
+.toasts { position: fixed; right: 18px; top: 70px; z-index: 90; display: flex; flex-direction: column; gap: 6px; pointer-events: none; }
+.toast {
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: .05em;
+  padding: 7px 11px; background: rgba(10,18,20,.92); border: 1px solid var(--line-strong);
+  color: var(--muted); animation: toastIn .3s both;
+}
+.toast.up { color: var(--teal); border-color: rgba(79,209,197,.3); }
+.toast.down { color: var(--red); border-color: rgba(229,72,77,.32); }
+@keyframes toastIn { from { opacity: 0; transform: translateX(12px); } }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1080px) {
+  .game-body { grid-template-columns: minmax(0, 1fr) 270px; }
+  .hud { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 860px) {
+  .game-body { grid-template-columns: 1fr; }
+  .game-side { position: static; grid-template-columns: 1fr 1fr; }
+  .log-card { grid-column: 1 / -1; }
+  .ug-wrap { grid-template-columns: 1fr; gap: 26px; }
+  .ug-side { display: flex; gap: 24px; border-right: 0; border-bottom: 1px solid var(--line); padding: 0 0 18px; overflow-x: auto; }
+  .ug-progress { grid-auto-flow: column; }
+  .ug-ledger { margin-top: 0; min-width: 160px; }
+  .ending-stats { grid-template-columns: repeat(3, 1fr); }
+  .compare-head, .compare-row { grid-template-columns: 58px 1fr 1fr; }
+  .form-head { flex-direction: column; align-items: flex-start; }
+  .form-id { flex-wrap: wrap; gap: 12px; }
+}
+@media (max-width: 640px) {
+  .chrome { padding: 10px 14px; }
+  .brand-text { font-size: 13px; }
+  .chip-btn { font-size: 10px; padding: 6px 9px; }
+  .mega { font-size: clamp(52px, 16vw, 84px); flex-direction: column; gap: 4px; }
+  .seal { position: absolute; right: 22px; margin-top: 0; }
+  .title-sub { font-size: 19px; }
+  .title-actions .btn { flex: 1 1 100%; }
+  .hud { grid-template-columns: repeat(2, 1fr); }
+  .actions { grid-template-columns: 1fr; }
+  .action { min-height: 92px; }
+  .game-side { grid-template-columns: 1fr; }
+  .dept-quote { display: none; }
+  .dept-block { max-width: 46%; }
+  .clock { font-size: 20px; }
+  .game-head { align-items: center; }
+  .ending-title { font-size: 34px; letter-spacing: .02em; }
+  .ending-actions .btn { flex: 1 1 100%; }
+  .game-head { gap: 10px; }
+  .dept-block { padding: 5px 7px; }
+  .major { grid-template-columns: auto 1fr auto; gap: 10px; padding: 16px 14px; align-items: start; }
+  .major-index { font-size: 9px; padding-top: 5px; }
+  .major-name { font-size: 18px; }
+  .major-meta { gap: 6px; font-size: 10px; }
+  .major-note { font-size: 10px; }
+  .major-right { grid-column: auto; text-align: right; }
+  .major-quit { font-size: 20px; }
+  .major-quit small { display: block; margin-left: 0; font-size: 8px; }
+  .title-meta { font-size: 9px; gap: 6px; }
+  .modal-panel { padding: 24px 18px 20px; }
+  .choice { grid-template-columns: 1fr; }
+  .choice-hint { text-align: left; max-width: none; }
+  .modal-hint { display: none; }
+  .compare-row { font-size: 10px; }
+  .report-top { align-items: center; }
+  .report-stamp { font-size: 11px; }
+}
+
+
+@media (max-width: 380px) {
+  .ending-stats { grid-template-columns: repeat(2, 1fr); }
+  .es b { font-size: 15px; }
+  .stat-val { font-size: 16px; }
+  .major-name { font-size: 16px; }
+  .dept-block { max-width: 52%; }
+  #btn-share { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+  .ticker-track { animation: none; }
+}
+
+</style>
+</head>
+<body>
+<canvas id="ecg-bg" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="chrome">
+  <button class="brand" id="brand-home" title="回到标题">
+    <span class="brand-mark"><i></i></span>
+    <span class="brand-text">劝人学医<em>QUIT MED</em></span>
+  </button>
+  <div class="chrome-actions">
+    <button class="chip-btn" id="btn-share" title="复制页面链接">分享</button>
+    <button class="chip-btn" id="btn-report">劝退报告</button>
+    <button class="chip-btn" id="btn-sound" aria-pressed="true">音效 <span id="sound-state">开</span></button>
+  </div>
+</header>
+
+<main id="stage">
+
+  <!-- ============ TITLE ============ -->
+  <section id="s-title" class="screen active" aria-label="标题">
+    <div class="title-wrap">
+      <div class="eyebrow"><span class="live-dot"></span> 2026 高考志愿 · 特别提醒</div>
+      <h1 class="mega">劝人学医<span class="seal">临床</span></h1>
+      <p class="title-sub">天打雷劈，是玄学；<br /><span class="hl">规培三年，是现实。</span></p>
+      <p class="title-desc">一款关于临床医学的劝退模拟器。<br />在把青春押上去之前，先看看代价。</p>
+      <div class="title-actions">
+        <button class="btn primary" id="btn-start">开始填报志愿</button>
+        <button class="btn ghost hidden" id="btn-continue">继续上次的规培</button>
+        <button class="btn link" id="btn-report-title">先看劝退报告 →</button>
+      </div>
+      <div class="title-meta">
+        <span>建议游玩 8–12 分钟</span><span>·</span><span>12 个科室</span><span>·</span><span>13 种结局</span><span>·</span><span>自动存档</span>
+      </div>
+    </div>
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker-track">
+        <span>“医生，我网上查了，我这个病不用做手术吧？”</span><span class="tick-sep">/</span>
+        <span>“你们当医生的，一个月不得好几万？”</span><span class="tick-sep">/</span>
+        <span>“年轻人，多吃点苦。” </span><span class="tick-sep">/</span>
+        <span>“不就是值个夜班吗？”</span><span class="tick-sep">/</span>
+        <span>“隔壁老王家的孩子学计算机，年终奖二十万。”</span><span class="tick-sep">/</span>
+        <span>“学医好，越老越吃香。”</span><span class="tick-sep">/</span>
+        <span>“医生，你结婚了吗？有房吗？”</span><span class="tick-sep">/</span>
+        <span>“你们不是白衣天使吗？”</span><span class="tick-sep">/</span>
+      </div>
+    </div>
+    <div class="title-foot">本游戏为讽刺作品，情节虚构；数字为行业常见区间，具体因地区、医院、科室而异。<br />含猝死、抑郁、伤医等情节，请酌情游玩。</div>
+  </section>
+
+  <!-- ============ APPLY ============ -->
+  <section id="s-apply" class="screen" aria-label="志愿填报">
+    <div class="apply-wrap">
+      <div class="form-head">
+        <div>
+          <div class="form-kicker">普通高等学校招生 · 本科批</div>
+          <div class="form-title">志愿填报系统</div>
+        </div>
+        <div class="form-id">
+          <div>考生 <b>你</b></div>
+          <div>总分 <b>651</b></div>
+          <div>省排名 <b>8,432</b></div>
+        </div>
+      </div>
+      <div class="form-quotes">
+        <div><span>母亲</span>「学医好，越老越吃香。」</div>
+        <div><span>班主任</span>「稳定，铁饭碗。」</div>
+        <div><span>招生老师</span>「临床医学，五年制，毕业就是医生。」</div>
+      </div>
+      <div class="major-list" id="major-list"></div>
+      <div class="form-foot">
+        <span class="warn-mark">!</span>
+        每个专业都有代价。区别在于，有的代价是四年，有的是十年。
+      </div>
+      <button class="btn link back-link" id="btn-apply-back">← 回到标题</button>
+    </div>
+  </section>
+
+  <!-- ============ UNDERGRAD ============ -->
+  <section id="s-undergrad" class="screen" aria-label="本科五年">
+    <div class="ug-wrap">
+      <div class="ug-side">
+        <div class="ug-progress" id="ug-progress"></div>
+        <div class="ug-ledger" id="ug-ledger"></div>
+      </div>
+      <div class="ug-main">
+        <div class="ug-kicker" id="ug-kicker"></div>
+        <h2 class="ug-title" id="ug-title"></h2>
+        <div class="ug-body" id="ug-body"></div>
+        <div class="ug-choices" id="ug-choices"></div>
+        <div class="ug-next" id="ug-next"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GAME ============ -->
+  <section id="s-game" class="screen" aria-label="规培">
+    <div class="gamewrap">
+      <div class="game-head">
+        <div class="clock-block">
+          <div class="clock" id="clock">2031年8月</div>
+          <div class="clock-sub" id="clock-sub">规培第 1 年 · 第 1 个月 · 23 岁</div>
+        </div>
+        <div class="dept-block" id="dept-block">
+          <div class="dept-icon" id="dept-icon">🚑</div>
+          <div>
+            <div class="dept-name" id="dept-name">急诊科</div>
+            <div class="dept-quote" id="dept-quote"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hud" id="hud"></div>
+
+      <div class="game-body">
+        <div class="game-main">
+          <div class="month-card" id="month-card"></div>
+          <div class="section-label"><span>本月排班</span><i></i></div>
+          <div class="actions" id="actions"></div>
+          <div class="game-links">
+            <button class="txt-link danger" id="btn-quit">我想转行</button>
+            <button class="txt-link" id="btn-report-game">查看劝退报告</button>
+            <button class="txt-link" id="btn-save-quit">保存并退出</button>
+          </div>
+        </div>
+        <aside class="game-side">
+          <div class="side-card ideal-card">
+            <div class="side-head"><span>初心</span><b id="ideal-num">100</b></div>
+            <div class="ideal-bar"><i id="ideal-fill"></i></div>
+            <p id="ideal-note">“我想救人。”</p>
+          </div>
+          <div class="side-card log-card">
+            <div class="side-head"><span>值班日志</span><b id="log-count">0</b></div>
+            <div class="log" id="log"></div>
+          </div>
+          <div class="side-card tips-card">
+            <div class="side-head"><span>本月提示</span><b>?</b></div>
+            <p id="side-tip">体力低于 25 时，任何一次熬夜都可能要命。记得休息。</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ENDING ============ -->
+  <section id="s-ending" class="screen" aria-label="结局">
+    <div class="ending-wrap">
+      <div class="ending-kicker" id="ending-kicker"></div>
+      <h2 class="ending-title" id="ending-title"></h2>
+      <p class="ending-sub" id="ending-sub"></p>
+      <div class="ending-rule"><i></i></div>
+      <div class="ending-body" id="ending-body"></div>
+      <blockquote class="ending-quote" id="ending-quote"></blockquote>
+      <div class="ending-stats" id="ending-stats"></div>
+      <div class="ending-ledger" id="ending-ledger"></div>
+      <div class="ending-score">
+        <div class="score-num" id="quit-index">0</div>
+        <div class="score-label">劝 退 指 数</div>
+        <div class="score-note" id="score-note"></div>
+      </div>
+      <div class="compare" id="ending-compare"></div>
+      <div class="ending-actions">
+        <button class="btn primary" id="btn-again">再活一次</button>
+        <button class="btn ghost" id="btn-reapply">重新填报志愿</button>
+        <button class="btn ghost" id="btn-card">保存结局卡</button>
+        <button class="btn link" id="btn-report-end">查看劝退报告 →</button>
+      </div>
+      <div class="ending-foot">劝人学医，天打雷劈。本游戏不构成任何职业建议，只负责把账单摊开给你看。</div>
+    </div>
+  </section>
+
+  <!-- ============ ALT LIFE ============ -->
+  <section id="s-alt" class="screen" aria-label="平行人生">
+    <div class="alt-wrap" id="alt-wrap"></div>
+  </section>
+
+  <!-- ============ REPORT ============ -->
+  <section id="s-report" class="screen" aria-label="劝退报告">
+    <div class="report-wrap">
+      <div class="report-top">
+        <button class="btn ghost small" id="btn-report-back">← 返回</button>
+        <div class="report-stamp">劝退报告<br /><em>NO. 2026-01</em></div>
+      </div>
+      <div class="report-head">
+        <div class="eyebrow"><span class="live-dot"></span> 内部资料 · 请转给正在填志愿的人</div>
+        <h2>在按下“确认”之前，<br />先算清这七笔账。</h2>
+        <p>以下内容基于公开报道与行业普遍情况整理。数字为常见区间，具体因地区、医院、科室、学历差异很大。它不是判决书，只是一张价目表。</p>
+      </div>
+      <div id="report-body"></div>
+      <div class="report-end">
+        <h3>写在最后</h3>
+        <p>这不是在否定医生。恰恰相反，正因为医生重要，才不该让一群 18 岁的孩子，在完全不知道代价的情况下，用十年青春去换一件白大褂。</p>
+        <p>如果你看完这些，仍然想学医——那祝你成为一个好医生。但请记住：理想不能当饭吃，夜班也不会因为你善良就少一个。</p>
+        <p class="report-small">数据说明：规培补贴、薪资、工作时长等均为公开报道中的常见区间，非精确统计；政策与待遇可能随时间变化。本作不构成职业规划建议。</p>
+        <button class="btn primary" id="btn-report-cta">回到志愿表，重新选一次</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div id="modal-root" class="modal-root" aria-hidden="true"></div>
+<div id="toasts" class="toasts" aria-live="polite"></div>
+
+<script>
+/* ============================================================
+   劝人学医 · 核心数据
+   ============================================================ */
+window.GAME_DATA = {
+  meta: {
+    title: '劝人学医',
+    version: '1.0',
+    startYear: 2031,
+    startAge: 23,
+    totalMonths: 36,
+    stipend: 1800,
+    living: 2200
+  },
+
+  /* ---------------- 科室 ---------------- */
+  departments: [
+    { name: '急诊科', icon: '🚑', quote: '“先救命，后交钱。”——但没人告诉你，钱谁交。', mod: { hp: -2, san: -1, skill: 1 } },
+    { name: '重症医学科', icon: '🫀', quote: '这里的灯永远亮着，人也永远不够。', mod: { hp: -2, san: -2, skill: 1 } },
+    { name: '心血管内科', icon: '💓', quote: '介入手术室的铅衣，一件二十斤。', mod: { hp: -1, san: -1, skill: 1 } },
+    { name: '普通外科', icon: '🔪', quote: '“拉钩，别动。”——你保持了四十分钟。', mod: { hp: -2, san: -1, skill: 1 } },
+    { name: '儿科', icon: '🧸', quote: '一个孩子哭，六个家长围过来。', mod: { hp: -1, san: -2, skill: 1 } },
+    { name: '妇产科', icon: '🤰', quote: '凌晨三点的产房，永远有人在出生。', mod: { hp: -1, san: -1, skill: 1 } },
+    { name: '麻醉科', icon: '💉', quote: '外科医生治病，麻醉医生保命。', mod: { hp: -1, san: -1, skill: 1 } },
+    { name: '神经内科', icon: '🧠', quote: '查体查到第 38 个病人，你的手已经麻了。', mod: { hp: -1, san: -1, skill: 1 } },
+    { name: '骨科', icon: '🦴', quote: '“电钻给我。”——你递过去的是一把锤子。', mod: { hp: -2, san: -1, skill: 1 } },
+    { name: '消化内科', icon: '🩺', quote: '胃镜室的门一关，就是另一个世界。', mod: { hp: -1, san: -1, skill: 1 } },
+    { name: '呼吸内科', icon: '🫁', quote: '痰培养的结果，永远在明天出来。', mod: { hp: -1, san: -1, skill: 1 } },
+    { name: '血液科', icon: '🩸', quote: '骨穿、腰穿、化疗方案，还有家属的眼睛。', mod: { hp: -1, san: -2, skill: 1 } }
+  ],
+
+  /* ---------------- 每月行动 ---------------- */
+  actions: [
+    {
+      id: 'clinic', icon: '🩺', name: '上临床', sub: '查房 · 换药 · 跟台',
+      desc: '跟着上级查房、写病程、换药、拉钩。学到东西，也站到腿肿。',
+      effects: { hp: -8, san: -4, skill: 5, boss: 3 },
+      lines: [
+        '你跟着主任查了 32 个病人，站了六个小时。主任没看你一眼，但你记住了三个药名。',
+        '换药、拆线、拔管、送检。你今天说了 47 次“好的”。',
+        '你拉钩拉了四十分钟，肩膀不是自己的了。下台时，上级说了一句“还行”。',
+        '你写了 11 份病程，其中 9 份被退回重写。理由：标点符号不规范。'
+      ]
+    },
+    {
+      id: 'night', icon: '🌙', name: '值夜班', sub: '24h on call',
+      desc: '夜班费是这里最诚实的收入。代价是第二天的太阳。',
+      effects: { hp: -14, san: -9, money: 600, skill: 2, boss: 2 },
+      lines: [
+        '一夜收了 7 个病人，抢救 1 个，被护士叫醒 5 次。天亮时，你看着窗外的太阳，觉得它很陌生。',
+        '凌晨两点，你在值班室吃泡面，突然想起自己晚饭也没吃。',
+        '你处理了三次呼叫、两次输液反应、一次家属情绪失控。夜班费 600，平均每小时 25 块。',
+        '你在值班室的行军床上躺下，刚闭眼，电话响了：“新收，胸痛。”'
+      ]
+    },
+    {
+      id: 'paper', icon: '📄', name: '写论文', sub: 'SCI · 课题 · 标书',
+      desc: '规培证之外，你还得有一篇论文。版面费自己出。',
+      effects: { hp: -6, san: -8, money: -300, skill: 4, boss: 5 },
+      lines: [
+        '你改了 14 遍讨论部分，导师回复：“再想想。”',
+        '你花了三个晚上跑数据，最后发现纳入标准错了。',
+        '你给期刊交了 8000 元版面费，换来一张录用通知。导师说：“不错，挂我通讯。”',
+        '你在 PubMed 上刷到一篇同方向的论文，发现别人把你准备写的东西写完了。'
+      ]
+    },
+    {
+      id: 'rest', icon: '🛏', name: '补觉', sub: '关机 · 消失 · 活着',
+      desc: '睡到自然醒，不回消息。代价是导师的评价和下一个月的排班。',
+      effects: { hp: 30, san: 20, boss: -5, skill: -1 },
+      lines: [
+        '你关了手机，睡了 11 个小时。醒来时，有 23 条未读消息，其中 4 条来自护士长。',
+        '你回家洗了个澡，吃了顿热饭，在沙发上发呆。这是你这个月第一次觉得自己是个人。',
+        '你请了一天假，没批。你还是没去。第二天，你的排班多了两个夜班。',
+        '你睡了整整一个下午，梦见自己高考完的那个夏天。'
+      ]
+    },
+    {
+      id: 'hustle', icon: '💰', name: '搞副业', sub: '代驾 · 科普 · 医美',
+      desc: '用医学之外的方式赚钱。被发现了，叫“不务正业”。',
+      effects: { hp: -10, san: -5, money: 1800, boss: -3 },
+      lines: [
+        '你帮一家诊所写科普稿，一篇 800。对方说：“你们医生随便写写就行。”',
+        '你周末去做了两天医美咨询，赚了 2000。回来路上，你有点不认识自己。',
+        '你跑了两晚代驾，遇到一个醉酒的乘客，一路骂医生都是骗子。你把他安全送到了家。',
+        '你帮学弟改简历，一小时 300。他说：“学长，你当年为什么学医？”'
+      ]
+    },
+    {
+      id: 'family', icon: '📞', name: '找家里要钱', sub: '啃老 · 仅限每 3 个月',
+      desc: '你已经二十多岁了。电话接通前，你要先想好怎么开口。',
+      effects: { money: 3000, san: -8, ideal: -5 },
+      cooldown: 3,
+      lines: [
+        '“妈，最近……房租涨了。”电话那头沉默了两秒，然后说：“要多少？”',
+        '你爸没问原因，转了 3000，备注是“买点好吃的”。你盯着那四个字看了很久。',
+        '你说“发了奖金就还”，你妈说“不用还”。你挂了电话，在楼道里站了一会儿。',
+        '你编了三个理由，最后只说了一句“最近有点紧”。你妈说：“知道了，别省着。”'
+      ]
+    }
+  ],
+
+  /* ---------------- 本科五年 ---------------- */
+  undergrad: [
+    {
+      year: '大一', kicker: '2026 · 秋', title: '解剖楼的不眠夜',
+      body: [
+        '你拖着行李箱走进医学院。校门口挂着横幅：“健康所系，性命相托”。',
+        '第一堂系统解剖课，福尔马林的味道钻进鼻腔，三天没散。你跟着同学给大体老师鞠躬，然后翻开 600 页的教材。',
+        '高中同学在朋友圈晒社团、晒海边的日落。你在自习室背肱二头肌的起止点，背到凌晨一点。'
+      ],
+      choices: [
+        { text: '把绩点卷进前 10%', hint: '技能 +4 · 精神 -4', effects: { skill: 4, san: -4 }, result: '你成了自习室的常客。期末成绩出来，你排第 7。没有人恭喜你，但你知道，保研的门缝里还有光。' },
+        { text: '混社团，先享受大学', hint: '精神 +8 · 技能 -1', effects: { san: 8, skill: -1 }, result: '你加入了吉他社，认识了一群不会问你“以后怎么办”的人。那一年，你是快乐的。' },
+        { text: '打游戏，逃避一下', hint: '精神 +10 · 发量 -5 · 技能 -2', effects: { san: 10, hair: -5, skill: -2 }, result: '你在宿舍打到凌晨四点，段位上了两个大段。第二天上课，老师点名，你让室友答“到”。' }
+      ]
+    },
+    {
+      year: '大二', kicker: '2027 · 秋', title: '生理、生化、病理',
+      body: [
+        '课表从早八排到晚九。生理学的老师说：“这门课，没有重点，病人也不会按重点生病。”',
+        '你开始习惯在通宵自习室过夜，习惯用咖啡代替早饭。头发一把一把地掉，你安慰自己：聪明绝顶。',
+        '家里人打电话来，总要说一句：“好好学，以后当医生。”你嗯一声，挂了电话继续背三羧酸循环。'
+      ]
+    },
+    {
+      year: '大三', kicker: '2028 · 秋', title: '第一次进实验室',
+      body: [
+        '诊断学、病理学、药理学压过来。你第一次穿上白大褂，对着镜子看了很久。',
+        '考研机构的广告贴满了教学楼：“临床专硕，三年拿硕士+规培证。”下面一行小字：“上岸率约三成。”',
+        '你站在人生的岔路口，觉得自己还早。其实一点都不早了。'
+      ],
+      choices: [
+        { text: '进实验室，抱导师大腿', hint: '技能 +5 · 导师 +5 · 精神 -6', effects: { skill: 5, boss: 5, san: -6 }, result: '你开始养细胞、跑 Western、给师兄刷瓶子。导师记住了你的名字，这很重要。' },
+        { text: '谈一场恋爱', hint: '精神 +10 · 存款 -2000', effects: { san: 10, money: -2000 }, result: '你们一起去食堂、一起自习、一起在操场走圈。她说：“以后你值夜班，我给你送饭。”你信了。' },
+        { text: '提前准备考研', hint: '技能 +3 · 精神 -3', effects: { skill: 3, san: -3 }, result: '你买了全套考研资料，在扉页写下目标院校。那行字后来被翻了无数遍，边角都卷了。' }
+      ]
+    },
+    {
+      year: '大四', kicker: '2029 · 秋', title: '见习：第一次站在病床边',
+      body: [
+        '你开始见习。第一次给病人查体，手抖得听不清 heart 的声音。病人笑着说：“没事，慢慢来。”',
+        '带教老师查房时接了个电话，回来继续讲治疗方案。后来你才知道，他刚被投诉，理由是“解释不到位”。',
+        '你问他：“老师，你后悔学医吗？”他看了你一眼，说：“等你规培完再问我。”'
+      ]
+    },
+    {
+      year: '大五', kicker: '2030 · 秋', title: '实习、考研，还是转行',
+      body: [
+        '实习这一年，你值了人生第一个夜班。凌晨三点，你一个人推着病人去做 CT，走廊的灯一闪一闪。',
+        '你看见带教老师在办公室吃冷掉的盒饭，看见他被家属指着鼻子骂，看见他第二天照常查房。',
+        '考研报名、规培报名、秋招，三张表摆在你面前。你 23 岁，人生第一次要为一个决定负责十年。'
+      ],
+      choices: [
+        {
+          text: '考研：专硕并轨，三年拿硕士 + 规培证', hint: '学历硕士 · 技能 +6 · 精神 -8 · 存款 -3000',
+          effects: { skill: 6, san: -8, money: -3000, boss: 4 }, flag: 'master',
+          result: '你考上了。录取通知书寄到家里，你妈发了两条朋友圈。你看着“临床医学专业学位硕士”几个字，既高兴，又有点害怕。'
+        },
+        {
+          text: '直接规培：早点挣钱，早点独立', hint: '学历本科 · 精神 +4 · 存款 +2000',
+          effects: { san: 4, money: 2000 }, flag: 'bachelor',
+          result: '你签了规培协议。人事科说：“本科规培，好好干，以后有机会留院。”你信了。后来你才知道，“有机会”三个字，是医院最贵的三个字。'
+        },
+        {
+          text: '转行：趁还来得及', hint: '结束游戏 · 及时止损', quit: true,
+          result: '你把考研资料挂上了闲鱼，把白大褂叠好放进柜子。你妈哭了三天，你爸一个月没跟你说话。你 23 岁，第一次为自己做了一个“不体面”的决定。'
+        }
+      ]
+    }
+  ],
+
+  /* ---------------- 专业 ---------------- */
+  majors: [
+    {
+      id: 'clinical', name: '临床医学', years: '五年制', salary: '规培期 1.8K/月', quit: 99,
+      note: '母亲推荐 · 班主任推荐 · 招生老师推荐 · 亲戚也推荐',
+      badge: '全家都满意'
+    },
+    { id: 'cs', name: '计算机科学与技术', years: '四年制', salary: '起薪 12K–25K', quit: 35, note: '35 岁危机，但至少 35 岁前有钱' },
+    { id: 'teacher', name: '汉语言文学（师范）', years: '四年制', salary: '起薪 6K–10K', quit: 42, note: '有寒暑假，也有家长群' },
+    { id: 'finance', name: '金融学', years: '四年制', salary: '起薪 8K–20K', quit: 48, note: '西装、酒局、资源，以及裁员' },
+    { id: 'stomatology', name: '口腔医学', years: '五年制', salary: '起薪 8K–15K', quit: 58, note: '也是医学，但通常不用值大夜' },
+    { id: 'law', name: '法学', years: '四年制', salary: '实习 3K 起', quit: 46, note: '法考、实习、案源，熬出来就好了' },
+    { id: 'civileng', name: '土木工程', years: '四年制', salary: '起薪 7K–12K', quit: 52, note: '工地、驻外，但工资按时发' }
+  ],
+
+  /* ---------------- 平行人生 ---------------- */
+  altLives: {
+    cs: {
+      emoji: '💻', kicker: '平行人生 · 计算机', title: '你去了大厂',
+      body: [
+        '22 岁毕业，你进了互联网公司。第一份工资 15K，你给爸妈各买了一件羽绒服。',
+        '25 岁，你跳槽，年薪 40 万。你有周末，有年假，有头发。你在工位上贴了一张纸条：“不要用命换钱。”',
+        '30 岁，公司优化，你拿了 N+1。你休息了三个月，然后去了一家小公司。35 岁，你开始开网约车，但你有存款，有房子，有一个叫你爸爸的小孩。'
+      ],
+      costs: ['996 和随时待命的群消息', '35 岁危机是真的', '颈椎病、脂肪肝、干眼症'],
+      quote: '“你后悔没学医吗？”——“不后悔。我只是有点羡慕医生救人。”'
+    },
+    teacher: {
+      emoji: '📚', kicker: '平行人生 · 师范', title: '你站上了讲台',
+      body: [
+        '22 岁毕业，你考上了编制，回到家乡的中学教语文。第一个月工资 4800，但你有寒暑假。',
+        '你当班主任，早上六点到校，晚上十点查寝。家长群 24 小时有人 @ 你。你学会了在凌晨回“收到”。',
+        '28 岁，你带的第一届学生高考。有个孩子考上了医学院，你看着他，想说点什么，最后只说了一句：“好好学。”'
+      ],
+      costs: ['编制越来越难考', '家长群和升学率', '咽喉炎、静脉曲张'],
+      quote: '“老师，你当年为什么不学医？”——“因为我怕血。”'
+    },
+    finance: {
+      emoji: '📈', kicker: '平行人生 · 金融', title: '你穿上了西装',
+      body: [
+        '22 岁毕业，你进了券商。第一年，你学会了做 PPT、陪酒、在凌晨改第 18 版材料。',
+        '26 岁，你年薪 30 万，代价是胃和肝。你开始健身，开始买保险，开始害怕体检。',
+        '30 岁，行业下行，你被裁了。你拿着赔偿金去了一趟西藏，回来以后开了一家小咖啡馆。'
+      ],
+      costs: ['资源比能力重要', '酒局和熬夜', '周期来了，谁都跑不掉'],
+      quote: '“你们学医的，至少不会失业。”——“是啊，只是会累死。”'
+    },
+    stomatology: {
+      emoji: '🦷', kicker: '平行人生 · 口腔', title: '你拿起了牙钻',
+      body: [
+        '你学了口腔医学。同样是五年制，同样要规培，但你不用凌晨三点抢救病人。',
+        '26 岁，你在私立口腔诊所上班，底薪加提成，月入 1.5 万。你周末能休息，晚上能回家吃饭。',
+        '32 岁，你开了自己的诊所。你妈终于可以在亲戚面前说：“我孩子是牙医。”'
+      ],
+      costs: ['也是五年制 + 规培', '医患纠纷一样有', '种植牙集采，利润在降'],
+      quote: '“口腔医学和临床医学，是两个世界。”——你的学长，拔了八年牙。'
+    },
+    law: {
+      emoji: '⚖️', kicker: '平行人生 · 法学', title: '你通过了法考',
+      body: [
+        '22 岁毕业，你过了法考，进了一家律所实习。实习工资 3000，你住在城中村，每天挤地铁。',
+        '26 岁，你开始独立接案。第一个案子是劳动仲裁，标的 8000 块，你收了 2000 律师费。',
+        '32 岁，你有了自己的团队。你依然很忙，但你知道，忙的每一分钟都在为自己攒案源。'
+      ],
+      costs: ['法考通过率不高', '实习期收入极低', '案源焦虑'],
+      quote: '“医生和律师，都是越老越吃香。”——“但律师不用值夜班。”'
+    },
+    civileng: {
+      emoji: '🏗️', kicker: '平行人生 · 土木', title: '你去了工地',
+      body: [
+        '22 岁毕业，你进了施工单位，跟着项目去了西北。风沙很大，但工资按时发。',
+        '26 岁，你考了一建，当了项目经理。你晒得很黑，但你在老家付了首付。',
+        '30 岁，行业下行，项目少了。你开始考虑转行，但你有一级建造师证，饿不死。'
+      ],
+      costs: ['常年驻外，聚少离多', '工地环境艰苦', '行业周期下行'],
+      quote: '“你们土木的，至少不用背人命。”——“是啊，只背 KPI。”'
+    }
+  },
+
+  /* ---------------- 人生对照 ---------------- */
+  timeline: [
+    { age: '22 岁', you: '大五，准备考研', them: '本科毕业，第一份工作 8K' },
+    { age: '23 岁', you: '本科毕业，开始规培', them: '工作一年，开始存钱' },
+    { age: '26 岁', you: '规培结业，月薪 7K，开始投简历', them: '工作四年，年薪 25W，准备结婚' },
+    { age: '28 岁', you: '读博 / 专培 / 二战考核', them: '当上小组长，买了第一套房' },
+    { age: '30 岁', you: '还在读书或培训，靠家里', them: '孩子上幼儿园，年假去日本' },
+    { age: '32 岁', you: '博士毕业，非升即走', them: '跳槽涨薪，或被优化后拿 N+1' },
+    { age: '35 岁', you: '终于评上主治，夜班照旧', them: '房贷还剩 20 年，但周末能陪孩子' }
+  ],
+
+  /* ---------------- 劝退报告 ---------------- */
+  report: [
+    {
+      no: '01', title: '时间账', intro: '临床医学的学制，是所有本科专业里最长的一档。而这只是起点。',
+      list: [
+        '本科 5 年（多数专业 4 年）。',
+        '规培 3 年：住院医师规范化培训，期间拿的是补贴，不是工资。',
+        '三甲医院招聘普遍要求硕士或博士。专硕并轨可以省时间，学硕 + 规培则更久。',
+        '博士 3–4 年，博士后 2–3 年；部分专科还要 2–4 年专科培训。',
+        '最快 8 年拿到规培证；常见 11–13 年才能在三甲独立执业。'
+      ],
+      table: {
+        head: ['年龄', '节点'],
+        rows: [
+          ['18 岁', '高考，进入医学院'],
+          ['23 岁', '本科毕业，开始规培'],
+          ['26 岁', '规培结业，拿到规培证'],
+          ['29 岁', '硕士 / 博士毕业（如继续深造）'],
+          ['32–35 岁', '主治医师，非升即走的第一道坎']
+        ]
+      },
+      callout: '你 26 岁那年，高中同学已经工作 4 年、交了三年的公积金。你刚拿到一张规培证，开始投第一份正式简历。'
+    },
+    {
+      no: '02', title: '钱账', intro: '“医生越老越吃香”这句话，前半句是“越老”，后半句是“吃香”。中间那几十年，没人替你付房租。',
+      list: [
+        '规培补贴全国没有统一标准，多数地区每月 1000–4000 元；夜班费常见 30–100 元/次。',
+        '同期本科毕业生起薪，计算机、金融等专业常见 8K–20K。',
+        '规培期间还要支出：房租、吃饭、通勤、考试报名费、论文版面费、继续教育。',
+        '结业后住院医师月薪常见 6K–12K，地区、医院、科室差异很大。',
+        '集采、DRG/DIP 控费、绩效改革，都会直接影响收入。'
+      ],
+      callout: '一个规培生一个月的收入，可能不够付一间次卧的房租。<b>这不是段子，是很多人的工资条。</b>'
+    },
+    {
+      no: '03', title: '身体账', intro: '医院是一个 24 小时运转的地方。病人不会在下午五点停止生病，所以医生也不会。',
+      list: [
+        '夜班、24 小时值班、36 小时连轴转，是很多科室的常态。',
+        '长期睡眠剥夺、三餐不规律、久站久坐。',
+        '职业暴露：针刺伤、感染、辐射、化学消毒剂。',
+        '体检报告上的常见项：脂肪肝、窦性心动过速、甲状腺结节、颈椎反弓。',
+        '伤医事件不是新闻里的偶发，而是每个急诊科医生都想过的事。'
+      ],
+      callout: '你学的是救人，但没有人教你怎么救自己。'
+    },
+    {
+      no: '04', title: '心理账', intro: '规培生处在医院食物链的最底端：干最多的活，拿最少的钱，承担不小的责任。',
+      list: [
+        '医患纠纷、投诉、举证责任，往往先落到一线医生头上。',
+        '考核层层叠叠：出科考、年度考、执业医师、结业考、职称考。',
+        '科研压力：论文、课题、SCI、非升即走。',
+        '“你是医生，你怎么能生病？”——这句话本身就是一种病。',
+        '多项研究提示，医学生和年轻医生的抑郁、焦虑、职业倦怠检出率高于普通人群。'
+      ],
+      callout: '最难熬的不是累，是你在凌晨三点怀疑自己为什么要在这里。'
+    },
+    {
+      no: '05', title: '婚恋与家庭', intro: '20 多岁，是谈恋爱、结婚、生孩子的年纪。也是你值夜班、考试、写论文的年纪。',
+      list: [
+        '26–30 岁仍在培训，经济不独立，很多人还需要父母补贴。',
+        '异地、没房、没时间，是相亲市场上的三座大山。',
+        '父母生病时，你可能正在值班，电话接不到。',
+        '“医生”这个职业在婚恋市场有光环，但光环不能付首付。',
+        '有孩子的医生，很多都错过了孩子的第一次走路。'
+      ],
+      callout: '你妈说“学医好，越老越吃香”。她没说，老的那一天来之前，你要先熬过多少个夜班。'
+    },
+    {
+      no: '06', title: '出路账', intro: '学医不是一条直线。规培结业之后，你还要面对一个更残酷的问题：去哪里。',
+      list: [
+        '三甲医院：博士 + SCI + 关系，合同制，非升即走。',
+        '二甲 / 县医院：有编制，平台有限，夜班照旧。',
+        '私立 / 民营：看职称、口碑和流量。',
+        '药企、器械、保险、互联网医疗、医疗 AI：转行的常见去处。',
+        '公务员 / 事业单位：卫健委、疾控、医保局，竞争同样激烈。',
+        '完全转行：考公、编程、金融、教师。你比同龄人更能吃苦，这是真的。'
+      ],
+      callout: '“学医的转行，做什么都行。”——这句话是夸奖，也是心酸。'
+    },
+    {
+      no: '07', title: '如果你已经报了', intro: '如果你已经在这条路上，下面这些话不是劝退，是止损。',
+      list: [
+        '规培证是底线，先拿到它。',
+        '身体第一。学会拒绝，学会请假，学会在扛不住的时候说出来。',
+        '尽早规划：科研、学历、转行，越早准备越便宜。',
+        '存钱，买保险，别把全部希望押在“留院”上。',
+        '如果出现持续失眠、情绪低落、兴趣丧失，去看心理科。医生也可以生病。',
+        '转行不丢人。你学到的知识不会白费，只是换一种方式使用。'
+      ],
+      callout: '离开不是失败。在一个不适合你的系统里耗到 35 岁，才是。'
+    }
+  ]
+};
+
+</script>
+<script>
+/* ============================================================
+   劝人学医 · 事件 / 考核 / 结局
+   ============================================================ */
+(function () {
+  const D = window.GAME_DATA;
+
+  /* ============================================================
+     事件
+     ============================================================ */
+  D.events = [
+    {
+      id: 'first_night', t: '第一个夜班', min: 1, max: 4, w: 6,
+      text: '凌晨 3 点 17 分，护士拍醒你：“新收一个胸痛的，血压 85/50。”你脑子里那本《内科学》哗哗翻页，一页都停不下来。',
+      c: [
+        { text: '硬着头皮上', hint: '技能↑ 体力↓ 可能被骂', o: [{ e: { skill: 8, hp: -8, san: -6, boss: 4 }, r: '你开了第一份医嘱，手抖得像在写遗书。天亮时病人稳住了。上级看了你一眼：“还行。”——这是你听过最高的表扬。' }] },
+        { text: '打电话叫上级', hint: '导师↓ 但能学到东西', o: [{ e: { skill: 2, san: 2, boss: -3 }, r: '上级在电话里骂了你三分钟，然后穿着拖鞋来了。你站在旁边，学会了他怎么问病史、怎么开第一组药。' }] },
+        { text: '装没听见，继续睡', hint: '精神↓ 埋雷', o: [{ e: { san: -12, skill: -3, boss: -5 }, f: { nearMiss: true }, r: '你翻了个身。十分钟后，护士自己处理了。第二天交班，你不敢看她的眼睛。你安慰自己：反正没出事。' }] }
+      ]
+    },
+    {
+      id: 'records', t: '病历写不完', min: 1, max: 8, w: 5,
+      text: '凌晨 1 点 40 分，医生站只剩你。系统里躺着 17 份未写的病程，护士站还在催 3 份出院小结。带教老师说：“病历写不完，是要扣钱的。”',
+      c: [
+        { text: '熬到三点，全部写完', hint: '导师↑ 体力↓↓', o: [{ e: { hp: -10, san: -8, skill: 2, boss: 4 }, r: '你写完最后一份病程，手指在键盘上停了两秒。窗外天快亮了，你突然想起自己还没吃晚饭。' }] },
+        { text: '复制粘贴，改两个数字', hint: '省事 但有风险', o: [{ e: { san: -4, skill: -2, boss: -2 }, f: { recordRisk: true }, r: '你复制了上一份病程，改了两个数字。第二天质控抽查，你被点名。主任说：“这是对病人负责吗？”你没敢说话。' }] },
+        { text: '明天再说，先睡', hint: '精神↑ 导师↓', o: [{ e: { san: 4, boss: -6 }, r: '你关掉电脑，回值班室睡了。第二天，护士长在群里 @ 了你三次。你把手机扣在桌上，假装没看见。' }] }
+      ]
+    },
+    {
+      id: 'paycheck', t: '第一张工资条', min: 2, max: 5, w: 6,
+      text: '工资到账：1836.50 元。房租 1500，花呗 800，饭卡 200。你盯着短信看了半分钟，确认自己没有看错小数点。',
+      c: [
+        { text: '给妈妈打电话', hint: '存款↑ 精神↓', o: [{ e: { money: 3000, san: -5, ideal: -3 }, r: '你说“最近有点紧”。你妈没问原因，转了 3000，备注“买点好吃的”。你盯着那四个字，突然很想哭。' }] },
+        { text: '吃一个月泡面', hint: '省钱 体力↓', o: [{ e: { hp: -10, san: -6 }, r: '你买了一箱泡面，一天两顿。第三周，你闻见泡面味就想吐。你安慰自己：至少省了钱。' }] },
+        { text: '周末跑外卖', hint: '存款↑ 体力↓', o: [{ e: { money: 900, hp: -12, san: -4 }, r: '你骑着电动车跑了两个周末，赚了 900。最后一单送到医院门口，收件人是你的病人。他认出了你，你假装没认出他。' }] }
+      ]
+    },
+    {
+      id: 'reunion', t: '同学聚会', min: 4, max: 10, w: 4,
+      text: '高中同学聚会。学计算机的室友说他今年年终奖 20 万，准备付首付。有人转头问你：“你们医生是不是收红包很多？”',
+      c: [
+        { text: '认真解释', hint: '精神↓ 初心↓', o: [{ e: { san: -8, ideal: -5 }, r: '你从规培补贴讲到夜班费，讲了五分钟。他听完说：“那你们图什么？”你张了张嘴，没答上来。' }] },
+        { text: '笑笑，不说话', hint: '精神↓', o: [{ e: { san: -4, ideal: -3 }, r: '你笑了一下，低头夹菜。那一刻你突然发现，自己已经很久没有跟人说过“我以后要当个好医生”了。' }] },
+        { text: '吹牛：“一个月两三万”', hint: '面子↑ 心里更空', o: [{ e: { san: 3, ideal: -2 }, r: '你说“还行，一个月两三万”。他们羡慕地看着你。你喝了一口酒，觉得更空了。' }] }
+      ]
+    },
+    {
+      id: 'errand', t: '导师的私事', min: 2, max: 22, w: 4,
+      text: '导师给你发微信：“小同学，帮我取个快递，顺便接一下孩子，幼儿园 4 点半放学。”后面跟了一个微笑表情。',
+      c: [
+        { text: '全干，还要干得漂亮', hint: '导师↑↑ 精神↓', o: [{ e: { boss: 10, san: -8, hp: -6, skill: -1 }, r: '你取了快递、接了孩子、还顺手买了菜。导师说“辛苦了”。你回到医院，自己的病人已经等了两个小时。' }] },
+        { text: '只做分内的事', hint: '导师↓ 精神↑', o: [{ e: { boss: -8, san: 4 }, r: '你说“老师，我这边还有个病人”。导师回了一个“好”。第二天，你的排班多了一个夜班。' }] },
+        { text: '拒绝', hint: '导师↓↓ 精神↑', o: [{ e: { boss: -15, san: 8 }, f: { againstBoss: true }, r: '你说“老师，这不在我的工作范围内”。导师沉默了很久，说“知道了”。从那以后，你的出科评语变得很简短。' }] }
+      ]
+    },
+    {
+      id: 'paper_reject', t: '第 4 次拒稿', min: 6, max: 32, w: 4,
+      text: '论文第 4 次被拒。审稿意见只有一句话：“创新性不足。”你盯着屏幕，觉得这四个字也可以用来形容你的人生。',
+      c: [
+        { text: '改投水刊，交版面费', hint: '存款↓↓ 导师↑', o: [{ e: { money: -8000, skill: 2, boss: 6, san: -4 }, f: { paper: true }, r: '你交了 8000 版面费，换来一张录用通知。导师很高兴，说“挂我通讯”。你看着自己的名字排在第二，没说话。' }] },
+        { text: '继续改，改到中为止', hint: '技能↑ 体力↓↓', o: [{ e: { hp: -10, san: -10, skill: 6, boss: 4 }, r: '你改到凌晨四点，重写了讨论部分。第 5 次投稿，第 38 天，终于收到“Minor revision”。你在值班室笑出了声。' }] },
+        { text: '放弃科研', hint: '精神↑ 导师↓', o: [{ e: { san: 6, boss: -8 }, f: { noPaper: true }, r: '你删掉了所有投稿记录，把文献 PDF 移进回收站。那一刻你很轻松，但也知道，自己关上了一扇门。' }] }
+      ]
+    },
+    {
+      id: 'violence', t: '家属堵门', min: 8, max: 32, w: 4,
+      text: '患者术后出现并发症，家属堵在医生办公室门口，要求赔偿 80 万。保安站在走廊尽头，不敢过来。有人举着手机在拍。',
+      c: [
+        { text: '躲进值班室，反锁门', hint: '精神↓↓ 初心↓', o: [{ e: { san: -15, ideal: -10 }, r: '你反锁了门，听见外面砸东西的声音。一个小时后，警察来了。你坐在值班室的床上，手一直在抖。' }] },
+        { text: '出去解释', hint: '精神↓ 导师↑ 可能受伤', o: [{ w: 3, e: { san: -10, boss: 4, skill: 2, hp: -5 }, r: '你出去解释了 40 分钟，被推了两下。家属最后说：“你们就是不负责任。”你回到办公室，发现白大褂上有一道鞋印。' }] },
+        { text: '报警，走正规流程', hint: '精神↓ 导师↓', o: [{ e: { san: -8, boss: -2 }, f: { reported: true }, r: '你报了警，写了情况说明，医务科让你“注意态度”。事情平息了，但你从此在办公室门口放了一把椅子。' }] }
+      ]
+    },
+    {
+      id: 'envelope', t: '一个厚信封', min: 6, max: 30, w: 3,
+      text: '手术前一天，家属把你拉到楼梯间，塞给你一个信封。厚得像一块砖。他说：“医生，拜托了。”',
+      c: [
+        { text: '收下', hint: '存款↑↑ 精神↓ 风险', o: [{ e: { money: 5000, san: -10, ideal: -8 }, f: { bribe: true }, r: '你把信封塞进白大褂口袋，手术做了六个小时。那天下班，你在车里坐了很久才发动。' }] },
+        { text: '上交医务科', hint: '导师↑ 精神↑', o: [{ e: { boss: 2, san: 4, ideal: 3 }, r: '你把信封交给了医务科。家属被叫去谈话，回来时看你的眼神变了。你说不清那是感激还是害怕。' }] },
+        { text: '原样退回', hint: '初心↑', o: [{ e: { san: 2, ideal: 2, boss: 1 }, r: '你把信封推回去，说“这是我们应该做的”。家属愣了一下，然后哭了。你突然觉得，这句话其实很重。' }] }
+      ]
+    },
+    {
+      id: 'nurse', t: '护士长当众骂你', min: 2, max: 26, w: 3,
+      text: '你开错了一组医嘱，护士长当着整个护士站的面骂你：“你们这些规培生，到底学没学过？”',
+      c: [
+        { text: '道歉，马上改', hint: '导师↑ 精神↓', o: [{ e: { san: -6, boss: 2, skill: 1 }, r: '你说“对不起，我马上改”。护士长哼了一声，把医嘱单拍在桌上。后来她悄悄告诉你，这个药要减量。' }] },
+        { text: '顶嘴', hint: '精神↑ 导师↓', o: [{ e: { san: 4, boss: -5 }, f: { againstNurse: true }, r: '你说“你吼什么”。护士长愣了两秒，然后打电话叫来了你的上级。那天下午，你写了人生第一份检查。' }] },
+        { text: '甩锅给实习生', hint: '精神↓ 导师↓', o: [{ e: { san: -3, boss: -3 }, r: '你说“是实习生抽的血”。护士长看了你一眼，没再说话。从那天起，她再也没帮你挡过一次家属。' }] }
+      ]
+    },
+    {
+      id: 'mother_surgery', t: '妈妈要手术', min: 13, max: 22, w: 3,
+      text: '妈妈打电话来，说甲状腺结节要手术，预约在下周三。你翻了一下排班表：下周三，你值夜班。',
+      c: [
+        { text: '请假回去', hint: '导师↓ 精神↑ 初心↑', o: [{ e: { boss: -10, san: 10, ideal: 5, money: -1000 }, r: '你跟主任请了假，坐最早一班高铁回家。手术很顺利。你妈醒来说的第一句话是：“你工作不忙吗？”' }] },
+        { text: '不回去，工作要紧', hint: '精神↓↓ 初心↓', o: [{ e: { san: -20, ideal: -10 }, r: '你说“妈，我这边走不开”。你妈说“没事，你爸在”。手术那天，你在值班室坐了一整夜，手机放在手边。' }] },
+        { text: '托同学照看', hint: '存款↓ 精神↓', o: [{ e: { money: -2000, san: -5, boss: -2 }, r: '你托了同学照看。手术顺利，同学发来一张你妈在病床上的照片。你放大了看，发现她老了很多。' }] }
+      ]
+    },
+    {
+      id: 'death_news', t: '同行猝死', min: 10, max: 34, w: 4,
+      text: '凌晨刷到一条新闻：某三甲医院 28 岁规培生猝死。评论区最高赞是：“医生活该，谁让他们收红包。”',
+      c: [
+        { text: '转发，配一根蜡烛', hint: '精神↓ 初心↓', o: [{ e: { san: -10, ideal: -8 }, r: '你转发了，配了一个蜡烛。十分钟后，你删了。你怕导师看见，也怕自己看见。' }] },
+        { text: '关掉手机，假装没看见', hint: '精神↓', o: [{ e: { san: -6 }, r: '你把手机扣在桌上，闭上眼。你想起自己昨天也值了 24 小时。你决定明天去体检，然后忘了这个决定。' }] },
+        { text: '第二天去体检', hint: '存款↓ 体力↑', o: [{ e: { money: -800, hp: 10, san: 4 }, r: '你请了半天假去体检。报告上写了三行异常，医生说“注意休息”。你问：“怎么休息？”他看了你一眼，没回答。' }] }
+      ]
+    },
+    {
+      id: 'insurance_check', t: '医保飞检', min: 16, max: 32, w: 3,
+      text: '医保飞检。主任把你叫到办公室，指着几份病历说：“这几个地方，完善一下。”你看了看，发现是“完善”掉不该有的记录。',
+      c: [
+        { text: '按主任说的改', hint: '导师↑ 精神↓ 风险', o: [{ e: { san: -10, boss: 4 }, f: { recordRisk: true }, r: '你改了。飞检通过了，主任拍着你的肩说“小同学不错”。那天晚上，你梦见了那几个病人的名字。' }] },
+        { text: '拒绝', hint: '导师↓ 初心↑', o: [{ e: { boss: -10, san: -4, ideal: 5 }, f: { honest: true }, r: '你说“主任，这个我不能改”。主任看了你很久，说“那你看着办”。后来科里被扣了分，你的出科评语是“原则性强”。' }] },
+        { text: '匿名举报', hint: '精神↓ 导师↓↓', o: [{ e: { san: -12, boss: -15 }, f: { whistleblower: true }, r: '你写了一封匿名信。一个月后，调查组来了。主任被谈话，你被调去了最忙的科室。没有人知道是你，但你每天都觉得有人在看你。' }] }
+      ]
+    },
+    {
+      id: 'blind_date', t: '相亲', min: 16, max: 32, w: 4,
+      text: '亲戚介绍了一个相亲对象。坐下来不到五分钟，她问：“你一个月多少钱？有房吗？以后能顾家吗？”',
+      c: [
+        { text: '老实回答', hint: '精神↓↓', o: [{ e: { san: -12, ideal: -6 }, r: '你说“规培期一个月两千，没房，经常值夜班”。她点了点头，吃完这顿饭，再也没联系过你。' }] },
+        { text: '画个饼', hint: '精神↓', o: [{ e: { san: -4, ideal: -2 }, r: '你说“以后当了主治就好了”。她问“多久”，你说“大概……三十五岁”。她笑了一下，没接话。' }] },
+        { text: '不去', hint: '精神↓ 亲戚↓', o: [{ e: { san: -2, ideal: -1 }, r: '你没去。亲戚在家族群里说你“眼光高”。你妈给你打了三个电话，你都没接。' }] }
+      ]
+    },
+    {
+      id: 'kneel', t: '她跪下了', min: 9, max: 26, w: 3,
+      text: '一个农村来的老太太，在办公室门口跪下了。她老伴肝癌晚期，家里卖了牛，凑了 8 万。她说：“医生，求求你救救他。”',
+      c: [
+        { text: '扶起来，慢慢解释', hint: '初心↑ 精神↓', o: [{ e: { san: -5, ideal: 8 }, r: '你把她扶起来，蹲在地上跟她解释了半个小时。她听不懂，但一直说“谢谢”。你回到办公室，发现自己的眼睛也红了。' }] },
+        { text: '按流程，谈病情', hint: '精神↓', o: [{ e: { san: -4, ideal: -2 }, r: '你按流程解释了病情和治疗方案。她儿子签了字，放弃抢救。你看着那张纸，觉得自己的字写得真难看。' }] },
+        { text: '偷偷往账户里充钱', hint: '存款↓ 初心↑↑', o: [{ e: { money: -3000, ideal: 10, san: -2 }, r: '你往住院账户里充了 3000。老太太不知道，你也没说。那个月你吃了 20 天食堂最便宜的套餐。' }] }
+      ]
+    },
+    {
+      id: 'director_clinic', t: '替主任出门诊', min: 8, max: 30, w: 3,
+      text: '主任说他下午有个会，让你替他去门诊“顶一下”。你问：“遇到处理不了的怎么办？”他说：“你看着办。”',
+      c: [
+        { text: '硬着头皮出诊', hint: '技能↑ 精神↓ 风险', o: [{ e: { skill: 8, san: -8, hp: -6 }, f: { clinicRisk: true }, r: '你看了 43 个病人，其中 3 个你到现在都不知道诊断对不对。下班时，主任发来微信：“听说今天有个病人投诉？”' }] },
+        { text: '拒绝', hint: '导师↓ 精神↑', o: [{ e: { boss: -10, san: 4 }, r: '你说“主任，我资质不够”。主任看了你一眼，说“那算了”。第二天，你的排班表上多了三个夜班。' }] },
+        { text: '出诊，但每十分钟打电话', hint: '技能↑ 导师↓', o: [{ e: { skill: 4, san: -4, boss: -3 }, r: '你每遇到一个拿不准的病人就打电话。主任在第 5 个电话时挂了。你站在诊室里，第一次体会到什么叫“孤立无援”。' }] }
+      ]
+    },
+    {
+      id: 'conference', t: '三亚学术会议', min: 12, max: 28, w: 3,
+      text: '导师要去三亚开学术会议，让你跟着“学习”。实际上，你要负责拎包、拍照、订餐，以及替他挡酒。',
+      c: [
+        { text: '去，当好工具人', hint: '体力↑ 导师↑ 存款↓', o: [{ e: { hp: 8, san: 6, boss: 8, money: -2000 }, r: '你第一次住五星级酒店，第一次看见海。导师在酒桌上介绍你：“这是我学生，很能干。”你笑着敬酒，觉得自己像个道具。' }] },
+        { text: '不去，科里缺人', hint: '导师↓ 体力↓', o: [{ e: { boss: -6, hp: -6, san: -2 }, r: '你说“科里人手不够”。导师没说什么。后来你听说，他带了另一个规培生去。那个人的出科评语是“优秀”。' }] },
+        { text: '去了，但自己玩', hint: '精神↑ 导师↓', o: [{ e: { san: 10, boss: -4, money: -1500 }, r: '你去了，但没去会场，一个人在海边坐了一下午。导师找了半天，最后说“年轻人，玩心太重”。' }] }
+      ]
+    },
+    {
+      id: 'procurement', t: '集采落地', min: 18, max: 34, w: 3,
+      text: '集采落地，心脏支架从 1.3 万降到 700。科室群里发了通知：本季度绩效下调 40%。',
+      c: [
+        { text: '沉默，回“收到”', hint: '精神↓ 初心↓', o: [{ e: { san: -6, ideal: -4 }, r: '你在群里回了一个“收到”。没有人讨论这件事。那天查房，你看着病人的支架，突然想起它现在的价格。' }] },
+        { text: '吐槽一句', hint: '精神↑ 导师↓', o: [{ e: { san: 2, boss: -4 }, r: '你在群里说“那我们的劳动呢？”消息发出去三分钟，主任私聊你：“注意影响。”你撤回了，但很多人都看见了。' }] },
+        { text: '打开招聘软件', hint: '精神↑ 转行念头+', o: [{ e: { san: 4, ideal: -6 }, f: { quitIdea: true }, r: '你打开招聘软件，搜“医学背景”。跳出来一堆医药代表、医学编辑、临床监查员。你第一次觉得，外面的世界也在等你。' }] }
+      ]
+    },
+    {
+      id: 'death_notice', t: '死亡通知书', min: 8, max: 32, w: 4,
+      text: '一个 22 岁的女孩，车祸，抢救了四个小时，还是没救回来。家属在抢救室外哭。主任让你去递死亡通知书。',
+      c: [
+        { text: '自己递过去', hint: '精神↓↓ 技能↑', o: [{ e: { san: -10, ideal: 4, skill: 2 }, r: '你把那张纸递过去，手在抖。女孩的妈妈抓住你的白大褂，问“为什么”。你答不上来。那天晚上，你在值班室坐到天亮。' }] },
+        { text: '请上级去递', hint: '精神↓ 导师↓', o: [{ e: { san: -6, boss: -4 }, r: '你去找主任，主任看了你一眼，自己去了。你站在走廊尽头，听见哭声，觉得自己很没用。' }] },
+        { text: '递完，陪他们哭一会儿', hint: '精神↓↓ 初心↑', o: [{ e: { san: -12, ideal: 6 }, r: '你把通知书递过去，然后蹲下来，陪着他们哭了一会儿。后来护士长说，你不该这样。但你记得，那个妈妈最后对你说了“谢谢”。' }] }
+      ]
+    },
+    {
+      id: 'fever_clinic', t: '发热门诊抽调', min: 14, max: 30, w: 3,
+      text: '医院抽调人去发热门诊，一个月闭环管理，不能回家。名单上有你的名字。',
+      c: [
+        { text: '去', hint: '体力↓ 导师↑ 初心↑', o: [{ e: { hp: -15, san: -10, boss: 8, ideal: 6 }, r: '你去了。防护服穿 6 个小时，不敢喝水，脸上勒出印子。出来那天，你在医院门口站了很久，觉得阳光有点刺眼。' }] },
+        { text: '找关系不去', hint: '精神↓ 导师↓ 存款↓', o: [{ e: { san: -4, boss: -8, money: -1000 }, f: { privilege: true }, r: '你托人说了情，留在了原科室。名单换成了另一个规培生。他出发那天，你不敢看他的朋友圈。' }] },
+        { text: '去，但晚上偷偷回家', hint: '体力↑ 风险', o: [{ e: { hp: -8, san: 2, boss: -4 }, f: { ruleBreak: true }, r: '你去了，但晚上偷偷回了一趟家。第二天被查到，写了检查。你妈说：“回来就好。”你笑了笑，没说话。' }] }
+      ]
+    },
+    {
+      id: 'side_hustle', t: '医美机构的邀请', min: 8, max: 32, w: 3,
+      text: '学弟介绍你去一家医美机构做“医学顾问”，一晚 2000。对方说：“不用你动手，坐着聊天就行。”',
+      c: [
+        { text: '去', hint: '存款↑↑ 精神↓ 风险', o: [{ e: { money: 3000, san: -8, boss: -4 }, f: { moonlight: true }, r: '你去了三次，赚了 6000。第四次，你在机构门口遇见了自己的病人。她愣了一下，说：“医生，你也在这儿上班？”' }] },
+        { text: '不去', hint: '初心↑', o: [{ e: { san: 2, ideal: 2 }, r: '你拒绝了。学弟说“你太老实了”。你笑了笑。那个月你靠泡面撑了过去，但睡得很踏实。' }] },
+        { text: '介绍学弟去，拿介绍费', hint: '存款↑ 精神↑ 风险', o: [{ e: { money: 1000, san: 2 }, f: { moonlight: true }, r: '你拿了 1000 介绍费。学弟去了，后来被医院发现，记了过。他再也没跟你说过话。' }] }
+      ]
+    },
+    {
+      id: 'authorship', t: '一作被抢', min: 18, max: 34, w: 3,
+      text: '你写了半年的论文，第一作者被导师挂到了一个“关系户”名下。导师说：“你还年轻，以后有的是机会。”',
+      c: [
+        { text: '忍', hint: '精神↓↓ 初心↓', o: [{ e: { san: -15, ideal: -10, boss: 2 }, r: '你说“好的，老师”。那天晚上，你把论文 PDF 打开又关掉，反复了十几次。你第一次认真考虑转行。' }] },
+        { text: '争', hint: '导师↓ 精神↑', o: [{ e: { boss: -15, san: 2, ideal: 4 }, f: { againstBoss: true }, r: '你说“老师，这篇文章是我写的”。导师沉默了一会儿，说“那你想怎么样”。最后你保住了共同一作，也保住了一个敌人。' }] },
+        { text: '举报', hint: '导师↓↓ 精神↓', o: [{ e: { boss: -25, san: -10 }, f: { whistleblower: true }, r: '你把邮件和聊天记录发给了研究生院。调查持续了三个月。导师被通报批评，你也被约谈了很多次。你赢了，但你不知道自己还算不算赢。' }] }
+      ]
+    },
+    {
+      id: 'health_check', t: '体检报告', min: 14, max: 33, w: 3,
+      text: '体检报告出来了：脂肪肝、窦性心动过速、甲状腺结节、颈椎反弓。医生建议你“规律作息，避免熬夜”。',
+      c: [
+        { text: '认真治，开始养生', hint: '存款↓ 体力↑', o: [{ e: { money: -1500, hp: 15, san: 6 }, r: '你挂了号，做了进一步检查，买了一个颈椎枕。你开始每天走 8000 步，坚持了 11 天。' }] },
+        { text: '塞进抽屉，继续值班', hint: '体力↓', o: [{ e: { hp: -10, san: -4 }, r: '你把报告塞进抽屉，继续值夜班。你安慰自己：年轻，扛得住。你才二十几岁。' }] },
+        { text: '发朋友圈自嘲', hint: '精神↑', o: [{ e: { san: 4, ideal: -2 }, r: '你拍了一张报告，配文“医学生体检，全是职业病”。收获 32 个赞，其中 8 个来自同事。' }] }
+      ]
+    },
+    {
+      id: 'duty_room', t: '值班室的床', min: 8, max: 34, w: 3,
+      text: '你算了一下，这个月你在值班室睡了 21 天。枕头下面有没洗的白大褂，柜子里有三箱泡面。',
+      c: [
+        { text: '继续住下去', hint: '体力↓ 存款↑', o: [{ e: { hp: -6, san: -4, money: 200 }, r: '你把值班室当成了家。护士长说：“你干脆把户口迁过来算了。”你笑了笑，觉得很合理。' }] },
+        { text: '回家睡', hint: '体力↑ 精神↑ 导师↓', o: [{ e: { hp: 12, san: 10, boss: -6 }, r: '你回了家，洗了澡，睡在自己的床上。半夜电话响了，是急诊。你赶回去的时候，病人已经处理完了。主任在群里问：“人呢？”' }] },
+        { text: '买张行军床', hint: '存款↓ 体力↑', o: [{ e: { money: -300, hp: 8, san: 4 }, r: '你买了一张折叠床，放在值班室角落。你给它起了个名字，叫“家”。' }] }
+      ]
+    },
+    {
+      id: 'attendance', t: '规培办查岗', min: 4, max: 30, w: 3,
+      text: '规培办查岗。你迟到了 7 分钟，被记了名字。通知上写：一次警告，两次通报，三次延期结业。',
+      c: [
+        { text: '认罚，写检查', hint: '存款↓ 精神↓', o: [{ e: { money: -500, san: -6 }, r: '你交了罚款，写了检查。规培办老师说：“年轻人，态度要好。”你点头，心里骂了一句。' }] },
+        { text: '找导师帮忙', hint: '导师↓ 欠人情', o: [{ e: { boss: -4, san: -2 }, r: '导师帮你说了句话，警告撤了。你欠了他一个人情。后来他让你帮他写了三个月的标书。' }] },
+        { text: '当场理论', hint: '精神↑ 导师↓ 风险', o: [{ e: { san: 2, boss: -8 }, f: { againstBoss: true }, r: '你说“我昨晚值到凌晨两点”。规培办说“那是你的事”。你拍了桌子。结果：全院通报，延期结业警告。' }] }
+      ]
+    },
+    {
+      id: 'house_friend', t: '同学买房了', min: 20, max: 34, w: 3,
+      text: '高中同学群，有人晒了房产证。首付 120 万，父母出了 80 万。你点了个赞，退出了群聊。',
+      c: [
+        { text: '点赞，说恭喜', hint: '精神↓ 初心↓', o: [{ e: { san: -8, ideal: -6 }, r: '你点了个赞，在评论区打了一句“恭喜”。然后你算了算自己的存款，发现连一个卫生间都买不起。' }] },
+        { text: '屏蔽他', hint: '精神↓', o: [{ e: { san: -4 }, r: '你屏蔽了他的朋友圈。眼不见心不烦。但你还是在半夜醒来，想起自己快 26 岁了，还在租房子。' }] },
+        { text: '关掉朋友圈', hint: '精神↑ 初心↓', o: [{ e: { san: 2, ideal: -2 }, r: '你关掉了朋友圈入口。世界清净了很多。你开始把时间花在值班和睡觉上，不再关心别人过得怎么样。' }] }
+      ]
+    },
+    {
+      id: 'success_case', t: '第一面锦旗', min: 5, max: 33, w: 4,
+      text: '你独立完成了一台阑尾炎。病人出院那天，家属送来一面锦旗，上面写着“医术精湛，医德高尚”。',
+      c: [
+        { text: '收下，卷起来放柜子', hint: '精神↑ 初心↑', o: [{ e: { san: 8, ideal: 10 }, r: '你把锦旗卷起来，放在柜子最上层。那天晚上你值夜班，第一次觉得没那么累。' }] },
+        { text: '挂在科室墙上', hint: '导师↑ 初心↑', o: [{ e: { boss: 4, ideal: 6, san: 4 }, r: '你把锦旗挂在了科室墙上。主任路过，看了一眼，说“不错”。你笑了，觉得这三个字比锦旗还重。' }] },
+        { text: '发朋友圈', hint: '精神↑ 初心↑', o: [{ e: { san: 6, ideal: 4 }, r: '你发了朋友圈，配文“第一台”。点赞的人很多，其中包括你妈。她评论：“我儿子真棒。”你盯着那条评论看了很久。' }] }
+      ]
+    },
+    {
+      id: 'quit_group', t: '医学生转行群', min: 20, max: 34, w: 3,
+      text: '你被拉进一个“医学生转行群”。群里有人晒了新工资条：月薪 18K，双休。他说：“早点出来，早点解脱。”',
+      c: [
+        { text: '私聊他', hint: '精神↑ 转行念头+', o: [{ e: { san: 6, ideal: -6 }, f: { quitIdea: true }, r: '你私聊了他，聊了两个小时。他给你发了内推码。你收藏了，没敢点开。' }] },
+        { text: '退群', hint: '初心↑', o: [{ e: { san: -2, ideal: 2 }, r: '你退了群，把手机扔到一边。你告诉自己：都走到这里了，不能回头。但你心里知道，你只是害怕承认自己也想走。' }] },
+        { text: '潜水，每条都看', hint: '精神↓ 初心↓', o: [{ e: { san: -4, ideal: -2 }, r: '你没说话，但每条消息都看了。群里的工资条像一根刺，扎在你每个夜班的凌晨三点。' }] }
+      ]
+    },
+    {
+      id: 'collapse', t: '眼前一黑', min: 6, max: 36, w: 2, cond: function (s) { return s.hp < 35; },
+      text: '你连续值班 36 小时。站起来的时候，眼前突然一黑，耳边嗡嗡响。你扶着墙，慢慢蹲了下去。',
+      c: [
+        { text: '请假，睡三天', hint: '体力↑ 导师↓', o: [{ e: { hp: 20, san: 6, boss: -10 }, r: '你请了三天假，睡了整整两天。主任在群里说“年轻人身体这么差”。你没回。' }] },
+        { text: '硬撑', hint: '体力↓↓ 危险', o: [{ e: { hp: -15, san: -10 }, f: { pushed: true }, r: '你喝了杯咖啡，继续写病历。那天晚上，你梦见自己躺在一张病床上，身上插满了管子。' }] },
+        { text: '去急诊看自己', hint: '存款↓ 体力↑', o: [{ e: { money: -2000, hp: 25, san: 4 }, r: '你自己挂了急诊，做了心电图。同事看了结果，说：“你再这样下去，早晚出事。”你笑了笑，说“知道”。' }] }
+      ]
+    },
+    {
+      id: 'father_money', t: '爸爸的转账', min: 20, max: 34, w: 3,
+      text: '爸爸发来一张照片，是他自己的体检报告。他说：“没事，就是血压有点高。”你看见报告日期是三个月前。',
+      c: [
+        { text: '让他别再打钱了', hint: '存款↓ 初心↑', o: [{ e: { money: -1000, san: -6, ideal: 4 }, r: '你说“爸，以后别给我转钱了”。你爸说“你一个人在外面，不容易”。你挂了电话，在楼道里站了很久。' }] },
+        { text: '收下他转的 5000', hint: '存款↑ 精神↓', o: [{ e: { money: 5000, san: -10, ideal: -5 }, r: '你收了钱，说“等我发了工资就还”。你爸说“不用”。你知道，这笔钱你一时半会儿还不上。' }] },
+        { text: '请两天假回家看看', hint: '精神↑ 导师↓', o: [{ e: { money: -1500, san: 8, boss: -6 }, r: '你请了两天假回家。你爸做了一桌子菜，一直问你“累不累”。你说“不累”。他看了你一眼，没拆穿。' }] }
+      ]
+    },
+    {
+      id: 'establishment', t: '没有编制了', min: 24, max: 35, w: 3,
+      text: '人事科通知：今年医院编制缩减，规培生不留编。想留下，要么读博，要么去分院。群里一片沉默。',
+      c: [
+        { text: '准备考博', hint: '精神↓ 学历↑', o: [{ e: { san: -10, skill: 4 }, f: { phdPlan: true }, r: '你开始联系博导，准备材料。你知道，读完博出来，你 30 岁，还是要从头开始。' }] },
+        { text: '去县医院', hint: '精神↑ 编制', o: [{ e: { san: 6, ideal: -4 }, f: { countyPlan: true }, r: '你投了县医院，对方很快回复：有编制，月薪 6000，夜班三天一个。你看着“编制”两个字，觉得它很重。' }] },
+        { text: '考公，去卫健委', hint: '精神↑ 转行', o: [{ e: { san: 6, ideal: -6 }, f: { civilPlan: true }, r: '你开始看行测和申论。你安慰自己：至少以后不用值夜班了。你不知道这算不算背叛了当年的理想。' }] },
+        { text: '转行', hint: '精神↑ 初心↓', o: [{ e: { san: 8, ideal: -8 }, f: { quitIdea: true }, r: '你打开了招聘软件。这一次，你没有关掉它。' }] }
+      ]
+    },
+    {
+      id: 'pharma_offer', t: '医药代表的饭局', min: 24, max: 34, w: 3,
+      text: '医药代表加了你微信，说想请你做“学术顾问”，一晚 3000，只需要在饭局上“讲两句”。',
+      c: [
+        { text: '收下讲课费', hint: '存款↑↑ 精神↓ 风险', o: [{ e: { money: 6000, san: -8 }, f: { bribe: true }, r: '你去了。饭局上，你讲了 20 分钟的“临床经验”，拿到一个信封。回家路上，你把信封放在副驾驶，一直没打开。' }] },
+        { text: '拒绝', hint: '初心↑', o: [{ e: { ideal: 5, san: 2 }, r: '你拒绝了。对方说“医生都像你这么清高就好了”。你笑了笑，没解释。' }] },
+        { text: '问他“你们还招人吗”', hint: '转行药企', o: [{ e: { san: 6, ideal: -8 }, f: { pharmaPlan: true }, r: '他愣了一下，然后笑了：“当然招。你这样有临床背景的，年薪三十万起。”你加了他的工作微信。' }] }
+      ]
+    },
+    {
+      id: 'stabbing', t: '同事被砍伤', min: 26, max: 35, w: 3,
+      text: '急诊科同事被患者家属砍伤，进了 ICU。医院发通报：“强烈谴责暴力伤医。”评论区有人说：“一个巴掌拍不响。”',
+      c: [
+        { text: '去参加悼念', hint: '精神↓↓ 初心↓', o: [{ e: { san: -12, ideal: -8 }, r: '你去了。烛光里，你看见很多熟悉的脸。有人小声说：“下一个会不会是我？”没有人回答。' }] },
+        { text: '沉默，照常上班', hint: '精神↓', o: [{ e: { san: -8, ideal: -4 }, r: '你什么都没说，第二天照常上班。急诊科的门口多了一个安检机，但你知道，那玩意儿拦不住什么。' }] },
+        { text: '买一件防刺服', hint: '存款↓ 体力↑', o: [{ e: { money: -800, hp: 6, san: -4 }, r: '你在网上买了一件防刺服，藏在更衣柜里。你没有告诉任何人。每次值夜班，你都会摸一下它。' }] }
+      ]
+    },
+    {
+      id: 'final_night', t: '结业前夜', min: 34, max: 36, w: 10,
+      text: '结业考试前夜。你翻出 8 年前的志愿填报表，上面的字迹已经有点模糊。你记得那天很热，你妈说：“学医好。”',
+      c: [
+        { text: '哭一场，然后睡觉', hint: '精神↑', o: [{ e: { san: 10, ideal: 4 }, r: '你关上门，哭了十分钟。然后洗了把脸，继续背书。第二天，你走进了考场。' }] },
+        { text: '背到凌晨两点', hint: '技能↑ 精神↓', o: [{ e: { san: -4, skill: 3 }, r: '你背到凌晨两点。合上书的时候，你发现自己什么都记住了，又什么都想不起来。' }] },
+        { text: '写点什么', hint: '精神↑ 初心↑', o: [{ e: { san: 6, ideal: 6 }, r: '你打开手机，写下：“如果再来一次，我可能还会学医。但我希望有人提前告诉我，代价是什么。”你保存了，没有发出去。' }] }
+      ]
+    },
+    {
+      id: 'chief_round', t: '主任提问', min: 3, max: 30, w: 4,
+      text: '主任查房，突然停下来问你：“这个病人为什么用这个药？”你脑子里一片空白。',
+      c: [
+        { text: '承认不会，回去查', hint: '技能↑ 导师↓', o: [{ e: { skill: 3, boss: -3, san: -4 }, r: '你说“主任，我回去查一下”。主任说“查清楚了再来”。那天下午，你把那本书翻了五遍。' }] },
+        { text: '硬着头皮瞎编', hint: '精神↓ 导师↓ 风险', o: [{ e: { san: -8, boss: -6 }, f: { nearMiss: true }, r: '你编了一个理由。主任听完，看着你，说“你确定？”你低下头。整个病房安静得可怕。' }] },
+        { text: '甩锅给实习生', hint: '精神↑ 初心↓', o: [{ e: { san: 2, boss: -4, ideal: -4 }, r: '你说“这是实习生开的”。主任看了看旁边的实习生，没再说话。那天晚上，实习生哭了。' }] }
+      ]
+    },
+    {
+      id: 'hair_loss', t: '一把头发', min: 10, max: 32, w: 3,
+      text: '洗头的时候，你发现手里有一把头发。你数了数，大概 40 根。你想起自己才二十几岁。',
+      c: [
+        { text: '买米诺地尔', hint: '存款↓ 精神↑', o: [{ e: { money: -400, hp: 2, san: 4 }, r: '你买了米诺地尔，每天早晚各喷一次。三个月后，你长出了一层细绒毛，像春天。' }] },
+        { text: '干脆剃光头', hint: '精神↑ 发量↓', o: [{ e: { san: 8, hair: -20, ideal: 2 }, r: '你剃了光头，戴了一顶帽子。同事说“挺酷”。你笑了笑。至少以后不用再数头发了。' }] },
+        { text: '接受现实', hint: '精神↓', o: [{ e: { san: -2, ideal: -2 }, r: '你把掉下来的头发扔进垃圾桶，继续写病历。你告诉自己：头发而已，命还在。' }] }
+      ]
+    },
+    {
+      id: 'colleague_quit', t: '同届退培了', min: 12, max: 34, w: 3,
+      text: '同届的规培生退培了。他去了保险公司，卖重疾险。走之前，他把听诊器送给了你，说：“替我好好活着。”',
+      c: [
+        { text: '祝福他', hint: '精神↑ 初心↓', o: [{ e: { san: 6, ideal: -4 }, r: '你请他吃了顿饭，送他到地铁口。他说“以后你买保险找我”。你笑了，说“好”。' }] },
+        { text: '动摇', hint: '精神↓ 转行念头+', o: [{ e: { san: -8, ideal: -6 }, f: { quitIdea: true }, r: '你回到值班室，打开招聘软件，又关掉。你问自己：我为什么还在这里？你没有答案。' }] },
+        { text: '向规培办反映他违约', hint: '精神↓ 导师↑ 良心↓', o: [{ e: { san: -6, ideal: -8, boss: 4 }, f: { betray: true }, r: '你向规培办反映了他的情况。他被要求赔偿违约金。你拿到了一个“表现优秀”的评语。从此，没有人再跟你交心。' }] }
+      ]
+    },
+    {
+      id: 'investigation', t: '纪检谈话', min: 24, max: 40, w: 5, cond: function (s) { return !!s.flags.bribe; },
+      text: '医药代表被查，供出了一批“讲课费”名单。纪检的人找你谈话，桌上放着一杯水，和一张你签过字的单子。',
+      c: [
+        { text: '配合调查，退钱', hint: '存款↓↓ 精神↓↓', o: [{ e: { money: -20000, san: -15, ideal: -5 }, f: { investigated: true }, r: '你交代了，退了钱，写了检查。医院给了你一个处分，但没有开除。你保住了工作，也保住了一个永远洗不掉的记录。' }] },
+        { text: '沉默', hint: '精神↓↓ 导师↓', o: [{ e: { san: -25, boss: -10 }, f: { investigated: true }, r: '你什么都没说。调查持续了两个月。最后因为证据不足，事情不了了之。但你每天上班，都觉得有人在背后看你。' }] }
+      ]
+    },
+    {
+      id: 'mentor_praise', t: '主任表扬了你', min: 6, max: 32, w: 3,
+      text: '交班会上，主任突然说：“这位同学最近进步很大，大家要向他学习。”所有人的目光都看向你。',
+      c: [
+        { text: '谦虚两句', hint: '导师↑ 精神↑', o: [{ e: { boss: 5, san: 8, skill: 2 }, r: '你说“都是老师教得好”。主任笑了笑。那天查房，他多跟你说了两句。' }] },
+        { text: '请全组喝奶茶', hint: '存款↓ 导师↑ 精神↑', o: [{ e: { money: -300, boss: 6, san: 6 }, r: '你点了 12 杯奶茶，花了 300。护士长说“这孩子会来事”。你笑了笑，觉得这 300 花得值。' }] },
+        { text: '发朋友圈', hint: '精神↑ 导师↓', o: [{ e: { san: 6, boss: -3 }, r: '你发了朋友圈，配文“继续努力”。导师在下面点了个赞，又在第二天查房时多问了你三个问题。' }] }
+      ]
+    }
+  ];
+
+  /* ============================================================
+     考核
+     ============================================================ */
+  D.exams = {
+    license: {
+      id: 'license', month: 9, retake: [15, 21],
+      kicker: '国家考试 · 执业医师',
+      title: '执业医师资格考试',
+      body: [
+        '实践技能三站，医学综合笔试。考场设在城郊的一所学校，门口全是抱着资料的人。',
+        '你看见一个孕妇坐在台阶上背书，看见一个头发花白的大哥在抽烟。有人已经考了三年。',
+        '通过率大约五到六成。你复习了三个月，做了 8000 道题。'
+      ],
+      threshold: 42,
+      passTitle: '你过了',
+      passText: '查分那天，你手抖着输入准考证号。页面刷新，三个字：“通过。”你坐在值班室的床上，笑了很久，然后给妈妈打了个电话。',
+      passEffects: { san: 12, ideal: 5, boss: 2 },
+      failTitle: '差了 6 分',
+      failText: '你差了 6 分。一起考的同事过了，在群里发红包。你没抢。第二年，你还要再来一次。',
+      failEffects: { san: -18, boss: -2, ideal: -4 },
+      retryText: '补考。你请了三天假，把往年真题又刷了一遍。考场还是那个考场，门口的人换了一批。'
+    },
+    annual: {
+      id: 'annual', months: [12, 24],
+      kicker: '年度考核 · OSCE',
+      title: '年度考核',
+      body: [
+        '三站式考核：问诊、查体、技能操作。考官坐在对面，面无表情地打分。',
+        '你抽到的题目是“急性胸痛的鉴别诊断”。你一边说，一边在心里数着还剩下几分钟。',
+        '走廊里贴着一张表：年度考核不合格者，延期结业。'
+      ],
+      thresholds: { 12: 50, 24: 64 },
+      passText: '你通过了。成绩单上写着“合格”。没有人夸奖你，但你知道，你又可以继续留在这里了。',
+      failText: '你没通过。成绩单上写着“不合格”。那三个月，你每次查房都低着头。',
+      failEffects: { san: -15, boss: -3, ideal: -4 }
+    },
+    final: {
+      id: 'final', month: 36,
+      kicker: '结业考核 · 最后一关',
+      title: '规培结业考核',
+      body: [
+        '三年，36 个月，12 个科室。今天，你要在考官面前证明自己可以独立执业。',
+        '技能站、理论站、病历站。你穿着洗得发白的白大褂，口袋里插着三支笔。',
+        '通过了，你就是一个“合格的住院医师”。没通过，你还要再熬半年。'
+      ],
+      threshold: 78,
+      passTitle: '你结业了',
+      passText: '考官在你的考核表上签了字。你走出考场，站在太阳底下，突然不知道要去哪里。三年结束了。你 26 岁。',
+      passEffects: { san: 10, ideal: 3 },
+      failTitle: '延毕',
+      failText: '你没过。规培办通知你：延期六个月，明年再考。你站在走廊里，把成绩单折了又折，最后塞进了口袋。',
+      failEffects: { san: -25, boss: -5, ideal: -8 },
+      retryText: '半年后，补考。你已经把题库背了三遍。考场外下着雨，你没带伞。'
+    }
+  };
+
+  /* ============================================================
+     结局
+     ============================================================ */
+  D.endings = {
+    death: {
+      kicker: 'ENDING 01 · 体力归零',
+      title: '你倒在了值班室',
+      sub: '26 岁，规培第 14 个月。死因：心源性猝死。',
+      body: [
+        '凌晨四点十七分，你写完最后一份病程，站起来想去倒杯水。眼前一黑。',
+        '护士发现你的时候，你趴在桌上，电脑屏幕还亮着，光标停在“患者目前情况”后面。',
+        '科室发了讣告，措辞沉痛。三天后，排班表上你的名字被划掉，换成了下一个规培生。',
+        '你妈妈在整理遗物时，发现你的白大褂口袋里有一张纸条：“等忙完这阵，就回家看看。”'
+      ],
+      quote: '“他平时身体挺好的。”——护士长在追悼会上说。',
+      score: 99.9, note: '你用自己的命，给“年轻人多吃点苦”这句话做了一个注脚。'
+    },
+    breakdown: {
+      kicker: 'ENDING 02 · 精神归零',
+      title: '你在查房时哭了出来',
+      sub: '26 岁，诊断：中度抑郁。处理：退培。',
+      body: [
+        '连续三个月，你每天醒来第一件事是数还剩几天休息。',
+        '那天主任问你“这个病人为什么用这个药”，你突然哭了，停不下来。整个病房的人都看着你。',
+        '你被诊断为中度抑郁，建议休息。你办了退培。妈妈来接你，一路上没说话，只在服务区给你买了一个茶叶蛋。',
+        '回到家，你把白大褂挂在衣柜最里面。有时候半夜醒来，还会以为自己睡在值班室。'
+      ],
+      quote: '“学医的人，心理素质怎么这么差？”——某位亲戚在家庭聚会上说。',
+      score: 99.2, note: '你不是不够坚强。你只是被要求一个人扛下整个系统。'
+    },
+    quit: {
+      kicker: 'ENDING 03 · 及时止损',
+      title: '你把白大褂叠好，放在了值班室的床上',
+      sub: '26 岁，规培第 N 个月。你递交了退培申请。',
+      body: [
+        '规培办让你赔违约金。你赔了。签完字的那一刻，你听见走廊里有推车经过，轮子吱呀作响。',
+        '你去了医药公司做医学联络官，或者去了互联网医疗做产品。第一次按时下班，你在公司楼下站了很久，不知道要去哪。',
+        '后来你发现，周末是可以休息的，晚上是可以睡觉的，生病是可以请假的。这些事，你花了三年才重新学会。',
+        '你偶尔会梦见自己还在值班。醒来后，你松了一口气：还好是梦。'
+      ],
+      quote: '“早该走了。”——你的大学室友，现在年薪三十万。',
+      score: 61.5, note: '止损不是失败。在一个不适合你的系统里耗到 35 岁，才是。'
+    },
+    fail: {
+      kicker: 'ENDING 04 · 结业失败',
+      title: '第二次结业考核，你还是没过',
+      sub: '27 岁，培训终止。',
+      body: [
+        '延毕的第六个月，你在考场外吐了。技能操作，你连无菌手套都戴反了。',
+        '规培办通知你：终止培训。八年，一张本科文凭，一张没用的结业证明。',
+        '你在医院门口坐到天黑。手机里是妈妈发来的消息：“考得怎么样？”你打了很久的字，最后只回了三个字：“没考上。”',
+        '第二天，你开始投简历。招聘软件上，你的专业后面跟着一个括号：（）'
+      ],
+      quote: '“八年都熬过来了，怎么就差这一步呢？”——你妈在电话里哭。',
+      score: 99.5, note: '系统不会记得你值过多少个夜班，它只记得你没通过。'
+    },
+    county: {
+      kicker: 'ENDING 05 · 县医院',
+      title: '你去了县医院',
+      sub: '26 岁，本科学历，规培证。月薪 6000，夜班三天一个。',
+      body: [
+        '三甲的门槛是博士，你够不着。县医院给你编制，还分了一间宿舍。',
+        '你妈觉得挺好：“稳定。”你想起高三那年，班主任说学医越老越吃香。你看着科室里 58 岁还在值夜班的老主任，没说话。',
+        '这里的病人不多，但每一个都把你当专家。你第一次独立处理心梗，手还是抖的。',
+        '晚上值班，你刷到同学的朋友圈：有人升了主治，有人去了私立，有人转行卖了保险。你关掉手机，继续写病历。'
+      ],
+      quote: '“在我们这儿，你就是专家。”——院长拍着你的肩说。',
+      score: 97.2, note: '你留在了体系里，只是离“三甲”越来越远。'
+    },
+    ordinary: {
+      kicker: 'ENDING 06 · 普通结业',
+      title: '你结业了，然后呢？',
+      sub: '26 岁，规培结业。投了 47 份简历，收到 3 个面试。',
+      body: [
+        '你拿到了规培结业证。三甲要博士，二甲要关系，私立要职称。',
+        '最后你去了一家二级医院，月薪 7000，夜班照旧。同学群里，有人晒了新房，有人晒了娃。',
+        '你算了算，按这个工资，首付要攒到 35 岁。你安慰自己：医生越老越吃香。',
+        '你妈至今相信这句话。你也没有拆穿她。'
+      ],
+      quote: '“医生越老越吃香。”——你妈在电话里说。',
+      score: 98.1, note: '你没有失败。你只是终于看清了这条路的价格。'
+    },
+    stay: {
+      kicker: 'ENDING 07 · 留院',
+      title: '你留在了这家三甲',
+      sub: '合同制，非升即走。第一个月，你值了 11 个夜班。',
+      body: [
+        '导师帮你说了话，你留院了。签合同那天，人事科说：“好好干，以后有机会转编。”你信了。',
+        '第三年，你还没评上主治，因为没中课题。第五年，你终于明白，“留院”不是终点，是另一条起跑线。',
+        '你的工位上贴着一张排班表，密密麻麻，像一张网。你已经很久没有在晚上十二点前睡过觉了。',
+        '但你还是喜欢查房。喜欢病人出院时说“谢谢”。喜欢那种“我把一个人拉回来了”的感觉。'
+      ],
+      quote: '“年轻人，不要总想着钱。”——科主任在年终总结会上说。',
+      score: 96.8, note: '你赢下了这场竞争，代价是把自己也变成了系统的一部分。'
+    },
+    phd: {
+      kicker: 'ENDING 08 · 读博',
+      title: '你考上了博士',
+      sub: '28 岁，还在读书。同龄人已经当上了小组长。',
+      body: [
+        '你考上了博士。导师说，博士毕业去三甲，还要做博后。你算了算，出站那年你 32 岁。',
+        '你还在为一只老鼠的伦理审查盖章，还在改第 18 版论文，还在凌晨两点回导师的微信。',
+        '你安慰自己：医生是越老越吃香。可你照镜子，发现发际线比论文进度跑得快。',
+        '你偶尔会想起本科毕业那年，如果直接去县医院，现在应该已经攒够首付了。'
+      ],
+      quote: '“学历越高越好找工作。”——这句话在医学界只对一半。',
+      score: 98.7, note: '你不是在读书。你是在用青春换一张更贵的入场券。'
+    },
+    director: {
+      kicker: 'ENDING 09 · 主任',
+      title: '二十年后，你成了主任',
+      sub: '46 岁。你终于坐进了那间办公室。',
+      body: [
+        '你在科会上说：“年轻人要多吃苦，我们当年都是这么过来的。”说完你愣了一下。',
+        '你想起 26 岁的自己，在值班室吃泡面，在楼梯间哭，在志愿填报表上写下“临床医学”。',
+        '你想说点别的，但下一个议题开始了：DRG 付费、集采、绩效考核、非升即走。',
+        '你低下头，在笔记本上写下一行字，又划掉了。没人知道那行字是什么。'
+      ],
+      quote: '“你变成了当年最讨厌的人。”——你当年的日记。',
+      score: 95.4, note: '你赢了系统。系统也因此赢了你。'
+    },
+    pharma: {
+      kicker: 'ENDING 10 · 药企',
+      title: '你去了药企',
+      sub: '年薪三十万，双休，出差住五星。',
+      body: [
+        '你递了退培申请，去了药企做医学联络官。第一次出差住五星级酒店，你在浴缸里泡了半个小时。',
+        '同学说你“背叛”了医学。你笑笑。只有你知道，你只是不想再在凌晨三点被护士叫醒。',
+        '你偶尔会梦见自己还在值班，醒来后庆幸：还好是梦。',
+        '你现在的 KPI，是让更多医生用你们公司的药。你比谁都清楚那些药的适应证和禁忌证。'
+      ],
+      quote: '“你学的那些，都白费了。”——你爸说。你没有反驳。',
+      score: 78.3, note: '你离开了医院，但没有离开医疗行业。这也是一种活法。'
+    },
+    civil: {
+      kicker: 'ENDING 11 · 考公',
+      title: '你考进了卫健委',
+      sub: '26 岁，朝九晚五，双休。',
+      body: [
+        '你考上了市卫健委。办公室不大，窗外有一棵树。你有了自己的工位、保温杯和午休时间。',
+        '你负责管理规培基地，检查规培生的考勤和补贴发放。你看着新一批规培生填表，想起自己当年一个月一千八。',
+        '你想给他们加点补贴，但预算不够。你只能把表格做得好看一点。',
+        '下班路上，你经过一家医院，看见急诊科的灯还亮着。你站了一会儿，然后继续往前走。'
+      ],
+      quote: '“至少，你不用再值夜班了。”——你对自己说。',
+      score: 72.6, note: '你从系统里走了出来，站到了系统的另一边。'
+    },
+    numb: {
+      kicker: 'ENDING 12 · 麻木',
+      title: '你还在，但你已经不在了',
+      sub: '26 岁，结业。你成了一个“合格”的医生。',
+      body: [
+        '你不再因为病人的感谢而开心，也不再因为家属的辱骂而难过。你只是完成流程。',
+        '查房、开药、写病历、值夜班。你像一台被设定好程序的机器，精确，稳定，没有故障。',
+        '有一天，一个实习生问你：“老师，你当初为什么学医？”你想了很久，说：“忘了。”',
+        '那天晚上你值夜班，看见窗外的月亮。你想起 18 岁的自己，曾经真的想救人。'
+      ],
+      quote: '“你变了。”——你妈说。你说：“没有，我只是累了。”',
+      score: 99.0, note: '理想不是一下子消失的。它是被一个又一个夜班磨没的。'
+    },
+    early_quit: {
+      kicker: 'ENDING 00 · 及时止损',
+      title: '你在 23 岁那年转行',
+      sub: '大五实习结束，你决定不干了。',
+      body: [
+        '你看着带教老师连续值了三个夜班，看着他在办公室吃冷掉的盒饭，看着他被家属指着鼻子骂。',
+        '你把考研资料挂上闲鱼，把白大褂叠好放进柜子。你妈哭了三天，你爸一个月没跟你说话。',
+        '你跨考了计算机，或者考了公。28 岁那年，你周末在公园晒太阳，突然想起解剖楼的味道。',
+        '你没有成为医生。但你说，那是你人生最正确的一次“放弃”。'
+      ],
+      quote: '“学医的转行，做什么都行。”——这是真的，因为你能吃苦。',
+      score: 38.0, note: '你没有被规培毁掉。你在被毁掉之前，先走了。'
+    }
+  };
+})();
+
+</script>
+<script>
+/* ============================================================
+   劝人学医 · 游戏逻辑
+   ============================================================ */
+(function () {
+  'use strict';
+
+  var D = window.GAME_DATA;
+  var $ = function (sel, el) { return (el || document).querySelector(sel); };
+  var $$ = function (sel, el) { return Array.prototype.slice.call((el || document).querySelectorAll(sel)); };
+  var SAVE_KEY = 'qrsy_save_v1';
+  var SET_KEY = 'qrsy_settings_v1';
+
+  var S = null;
+  var busy = false;
+  var currentScreen = 'title';
+  var reportReturn = 'title';
+  var ugState = null;
+  var endingData = null;
+  var audioCtx = null;
+  var settings = { sound: true };
+
+  var LABELS = { hp: '体力', san: '精神', money: '存款', skill: '技能', boss: '导师', hair: '发量', ideal: '初心' };
+
+  /* ---------------- 工具 ---------------- */
+  function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+  function rand(a, b) { return Math.floor(Math.random() * (b - a + 1)) + a; }
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+  function fmtMoney(n) {
+    var s = Math.abs(Math.round(n)).toLocaleString('zh-CN');
+    return (n < 0 ? '-¥' : '¥') + s;
+  }
+  function byId(id) {
+    for (var i = 0; i < D.events.length; i++) if (D.events[i].id === id) return D.events[i];
+    return null;
+  }
+  function setHTML(id, html) { var el = document.getElementById(id); if (el) el.innerHTML = html; }
+  function screenEl(name) { return document.getElementById('s-' + name); }
+
+  function showScreen(name) {
+    currentScreen = name;
+    $$('.screen').forEach(function (s) { s.classList.toggle('active', s.id === 's-' + name); });
+    window.scrollTo(0, 0);
+    document.body.setAttribute('data-screen', name);
+  }
+
+  function formatDate(month) {
+    var total = D.meta.startYear * 12 + 7 + (month - 1);
+    var y = Math.floor(total / 12);
+    var m = total % 12 + 1;
+    return y + '年' + m + '月';
+  }
+  function shortDate(month) {
+    var total = D.meta.startYear * 12 + 7 + (month - 1);
+    var y = Math.floor(total / 12);
+    var m = total % 12 + 1;
+    return y + '.' + (m < 10 ? '0' + m : m);
+  }
+  function ageAt(month) { return D.meta.startAge + Math.floor(Math.max(1, month) / 12); }
+
+  /* ---------------- 音效 ---------------- */
+  function ensureAudio() {
+    if (!audioCtx) {
+      try {
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) audioCtx = new AC();
+      } catch (e) { audioCtx = null; }
+    }
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+  }
+  function beep(freq, dur, vol, type) {
+    if (!settings.sound) return;
+    ensureAudio();
+    if (!audioCtx) return;
+    try {
+      var t = audioCtx.currentTime;
+      var o = audioCtx.createOscillator();
+      var g = audioCtx.createGain();
+      o.type = type || 'sine';
+      o.frequency.setValueAtTime(freq || 440, t);
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.linearRampToValueAtTime(vol || 0.03, t + 0.012);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + (dur || 0.09));
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start(t); o.stop(t + (dur || 0.09) + 0.03);
+    } catch (e) {}
+  }
+  function flatline() {
+    if (!settings.sound) return;
+    ensureAudio();
+    if (!audioCtx) return;
+    try {
+      var t = audioCtx.currentTime;
+      var o = audioCtx.createOscillator();
+      var g = audioCtx.createGain();
+      o.type = 'sine'; o.frequency.value = 880;
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.linearRampToValueAtTime(0.05, t + 0.05);
+      g.gain.setValueAtTime(0.05, t + 2.2);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 2.8);
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start(t); o.stop(t + 2.9);
+    } catch (e) {}
+  }
+
+  /* ---------------- 心电图背景 ---------------- */
+  function initECG() {
+    var cv = document.getElementById('ecg-bg');
+    if (!cv) return;
+    var ctx = cv.getContext('2d');
+    var w = 0, h = 0, dpr = 1, t0 = 0;
+    var pts = [[0, 0], [30, 0], [42, -7], [52, 0], [80, 0], [88, 10], [94, -58], [100, 22], [106, 0], [140, 0], [158, -12], [176, 0], [230, 0], [300, 0]];
+    function resize() {
+      dpr = Math.min(2, window.devicePixelRatio || 1);
+      w = cv.width = Math.floor(window.innerWidth * dpr);
+      h = cv.height = Math.floor(window.innerHeight * dpr);
+      cv.style.width = window.innerWidth + 'px';
+      cv.style.height = window.innerHeight + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    function wave(x) {
+      x = ((x % 300) + 300) % 300;
+      for (var i = 0; i < pts.length - 1; i++) {
+        if (x >= pts[i][0] && x <= pts[i + 1][0]) {
+          var k = (x - pts[i][0]) / Math.max(1, pts[i + 1][0] - pts[i][0]);
+          return pts[i][1] + (pts[i + 1][1] - pts[i][1]) * k;
+        }
+      }
+      return 0;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function draw(ts) {
+      if (!t0) t0 = ts;
+      var t = (ts - t0) / 1000;
+      ctx.clearRect(0, 0, w, h);
+      var base = Math.min(h * 0.66, 560);
+      var offset = reduce ? 0 : (t * 34) % 300;
+      ctx.lineWidth = 1.2;
+      ctx.strokeStyle = 'rgba(79, 209, 197, 0.16)';
+      ctx.shadowColor = 'rgba(79, 209, 197, 0.45)';
+      ctx.shadowBlur = 10;
+      ctx.beginPath();
+      for (var x = 0; x <= w; x += 2) {
+        var y = base + wave(x + offset) * 0.9;
+        if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+      ctx.lineWidth = 0.6;
+      ctx.strokeStyle = 'rgba(79, 209, 197, 0.07)';
+      ctx.beginPath();
+      for (var x2 = 0; x2 <= w; x2 += 2) {
+        var y2 = base + 4 + wave(x2 + offset - 38) * 0.9;
+        if (x2 === 0) ctx.moveTo(x2, y2); else ctx.lineTo(x2, y2);
+      }
+      ctx.stroke();
+      if (!reduce) requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
+  }
+
+  /* ---------------- 提示 ---------------- */
+  function toast(text, cls) {
+    var box = document.getElementById('toasts');
+    if (!box) return;
+    var el = document.createElement('div');
+    el.className = 'toast ' + (cls || '');
+    el.textContent = text;
+    box.appendChild(el);
+    while (box.children.length > 6) box.removeChild(box.firstChild);
+    setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 2600);
+  }
+  function toastDeltas(actual) {
+    Object.keys(actual).forEach(function (k) {
+      if (!actual[k]) return;
+      var v = actual[k];
+      var txt = LABELS[k] + ' ' + (k === 'money' ? (v > 0 ? '+' : '') + fmtMoney(v) : (v > 0 ? '+' : '') + v);
+      toast(txt, k === 'money' ? (v > 0 ? 'up' : 'down') : (v > 0 ? 'up' : 'down'));
+    });
+  }
+  function deltaHtml(actual) {
+    var keys = Object.keys(actual).filter(function (k) { return actual[k]; });
+    if (!keys.length) return '';
+    var parts = keys.map(function (k) {
+      var v = actual[k];
+      var cls = k === 'money' ? (v > 0 ? 'money-up' : 'money-down') : (v > 0 ? 'up' : 'down');
+      var val = k === 'money' ? (v > 0 ? '+¥' : '-¥') + Math.abs(v).toLocaleString('zh-CN') : (v > 0 ? '+' : '') + v;
+      return '<span class="delta ' + cls + '">' + LABELS[k] + ' ' + val + '</span>';
+    });
+    return '<div class="delta-list">' + parts.join('') + '</div>';
+  }
+
+  /* ---------------- 弹窗 ---------------- */
+  function modal(opts) {
+    return new Promise(function (resolve) {
+      var root = document.getElementById('modal-root');
+      var choices = opts.choices || [{ text: '继续', value: true }];
+      var btns = choices.map(function (c, i) {
+        return '<button class="choice ' + (c.className || '') + '" data-i="' + i + '"' + (c.disabled ? ' disabled' : '') + '>' +
+          '<span class="choice-main">' + c.text + '</span>' +
+          (c.hint ? '<span class="choice-hint">' + c.hint + '</span>' : '') +
+          '</button>';
+      }).join('');
+      root.innerHTML = '<div class="modal-backdrop"></div>' +
+        '<div class="modal-panel" role="dialog" aria-modal="true">' +
+        (opts.kicker ? '<div class="modal-kicker">' + opts.kicker + '</div>' : '') +
+        '<h3 class="modal-title">' + (opts.title || '') + '</h3>' +
+        '<div class="modal-body">' + (opts.body || '') + '</div>' +
+        '<div class="modal-choices">' + btns + '</div>' +
+        '<div class="modal-hint">' + (choices.length > 1 ? '数字键 1–' + choices.length + ' 快速选择' : 'Enter 继续') + '</div>' +
+        '</div>';
+      root.classList.add('open');
+      root.setAttribute('aria-hidden', 'false');
+      var panel = $('.modal-panel', root);
+      $$('.choice', panel).forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var i = parseInt(btn.getAttribute('data-i'), 10);
+          $$('.choice', panel).forEach(function (b) { b.disabled = true; });
+          beep(520, 0.05, 0.025, 'triangle');
+          closeModal();
+          var val = choices[i].value;
+          resolve(val === undefined ? i : val);
+        });
+      });
+    });
+  }
+  function closeModal() {
+    var root = document.getElementById('modal-root');
+    root.classList.remove('open');
+    root.setAttribute('aria-hidden', 'true');
+    setTimeout(function () {
+      if (!root.classList.contains('open')) root.innerHTML = '';
+    }, 240);
+  }
+
+  /* ---------------- 设置 / 存档 ---------------- */
+  function loadSettings() {
+    try {
+      var raw = localStorage.getItem(SET_KEY);
+      if (raw) settings = Object.assign(settings, JSON.parse(raw));
+    } catch (e) {}
+    updateSoundBtn();
+  }
+  function saveSettings() {
+    try { localStorage.setItem(SET_KEY, JSON.stringify(settings)); } catch (e) {}
+    updateSoundBtn();
+  }
+  function updateSoundBtn() {
+    var btn = document.getElementById('btn-sound');
+    if (!btn) return;
+    btn.setAttribute('aria-pressed', settings.sound ? 'true' : 'false');
+    var st = document.getElementById('sound-state');
+    if (st) st.textContent = settings.sound ? '开' : '关';
+  }
+  function save() {
+    if (!S) return;
+    try { localStorage.setItem(SAVE_KEY, JSON.stringify(S)); } catch (e) {}
+  }
+  function loadSave() {
+    try {
+      var raw = localStorage.getItem(SAVE_KEY);
+      if (!raw) return null;
+      var obj = JSON.parse(raw);
+      if (!obj || obj.finished || !obj.month) return null;
+      return obj;
+    } catch (e) { return null; }
+  }
+  function hasSave() { return !!loadSave(); }
+  function refreshContinue() {
+    var btn = document.getElementById('btn-continue');
+    if (!btn) return;
+    if (hasSave()) btn.classList.remove('hidden'); else btn.classList.add('hidden');
+  }
+
+  /* ---------------- 志愿填报 ---------------- */
+  function renderMajors() {
+    var html = D.majors.map(function (m, i) {
+      var cls = 'major' + (m.id === 'clinical' ? ' clinical' : '');
+      return '<button class="' + cls + '" data-id="' + m.id + '">' +
+        '<span class="major-index">' + String(i + 1).padStart(2, '0') + '</span>' +
+        '<span>' +
+        '<span class="major-name">' + m.name + '</span>' +
+        '<span class="major-meta"><i>' + m.years + '</i><i>' + m.salary + '</i><i>' + m.note + '</i></span>' +
+        (m.badge ? '<span class="major-note">' + m.badge + '</span>' : '') +
+        '</span>' +
+        '<span class="major-right"><span class="major-quit">' + m.quit + '<small>劝退指数</small></span></span>' +
+        '</button>';
+    }).join('');
+    setHTML('major-list', html);
+  }
+
+  var WARN_STEPS = [
+    {
+      kicker: '志愿确认 · 1 / 3',
+      title: '临床医学，五年制。',
+      body: '<p>五年本科，只是入场券。</p>' +
+        '<p>之后还有三年规培、可能的三年硕士、三到四年博士。最快八年，你才能拿到一张规培证。</p>' +
+        '<p class="quiet">你今年 18 岁。</p>'
+    },
+    {
+      kicker: '志愿确认 · 2 / 3',
+      title: '第一年，你每月到手可能不到两千。',
+      body: '<p>房租、吃饭、通勤、考试报名费、论文版面费。</p>' +
+        '<p>你 26 岁，还要给妈妈打电话，说“最近有点紧”。</p>' +
+        '<p class="quiet">而你的高中同学，已经工作四年，年薪三十万。</p>'
+    },
+    {
+      kicker: '志愿确认 · 3 / 3',
+      title: '第八年，你 26 岁。',
+      body: '<p>你拿到了规培证，开始投第一份正式简历。</p>' +
+        '<p>三甲要博士，二甲要关系，私立要职称。</p>' +
+        '<p>你值过 100 个夜班，掉了一半头发，错过了外婆的葬礼，也错过了孩子的第一次走路。</p>' +
+        '<p class="quiet">这些，招生简章上都不会写。</p>'
+    }
+  ];
+
+  async function clinicalConfirm(step) {
+    if (step >= WARN_STEPS.length) { askWhy(); return; }
+    var w = WARN_STEPS[step];
+    var v = await modal({
+      kicker: w.kicker, title: w.title, body: w.body,
+      choices: [
+        { text: '我意已决', value: 'yes', className: 'primary' },
+        { text: '再想想', value: 'no' }
+      ]
+    });
+    if (v === 'yes') clinicalConfirm(step + 1);
+    else { toast('你退出了确认。', 'down'); showScreen('apply'); }
+  }
+
+  async function askWhy() {
+    var v = await modal({
+      kicker: '最后一问', title: '你为什么想学医？',
+      body: '<p>不是问你的分数，也不是问你爸妈。<br>是问你。</p>',
+      choices: [
+        { text: '我想救人。', value: 'save' },
+        { text: '我爸妈说稳定。', value: 'stable' },
+        { text: '我不知道。', value: 'idk' }
+      ]
+    });
+    if (v === 'save') {
+      await modal({
+        kicker: '记住这句话', title: '它会撑你十年。',
+        body: '<p>也可能，是压垮你的最后一根稻草。</p>',
+        choices: [{ text: '进医院', value: 'go' }]
+      });
+      beginUndergrad({ ideal: 8 });
+    } else if (v === 'stable') {
+      await modal({
+        kicker: '你妈说得对', title: '稳定地穷，稳定地累。',
+        body: '<p>稳定地在凌晨三点被叫醒，稳定地在过年值夜班。</p><p>但她爱你，她只是不知道。</p>',
+        choices: [{ text: '进医院', value: 'go' }]
+      });
+      beginUndergrad({ ideal: -8, san: 6, money: 3000 });
+    } else {
+      var w = await modal({
+        kicker: '那就别报', title: '不知道，是最危险的答案。',
+        body: '<p>你可以用四年换一个不喜欢的专业，但不该用十年，换一个不知道自己为什么在这里的人生。</p>',
+        choices: [
+          { text: '换一个专业', value: 'back' },
+          { text: '我偏要报', value: 'go', className: 'danger' }
+        ]
+      });
+      if (w === 'back') { showScreen('apply'); }
+      else { beginUndergrad({ ideal: -5, san: -5 }); }
+    }
+  }
+
+  /* ---------------- 本科五年 ---------------- */
+  function beginUndergrad(bonus) {
+    ugState = { pre: Object.assign({}, bonus || {}), edu: '本科', path: 'social', index: 0, result: null };
+    showScreen('undergrad');
+    renderUG();
+  }
+  function applyPre(effects) {
+    if (!effects) return;
+    Object.keys(effects).forEach(function (k) {
+      ugState.pre[k] = (ugState.pre[k] || 0) + effects[k];
+    });
+  }
+  function renderUG() {
+    var item = D.undergrad[ugState.index];
+    var progress = D.undergrad.map(function (u, i) {
+      var cls = i < ugState.index ? 'done' : (i === ugState.index ? 'now' : '');
+      return '<div class="ug-step ' + cls + '"><i>' + (i < ugState.index ? '✓' : (i + 1)) + '</i>' + u.year + '</div>';
+    }).join('');
+    setHTML('ug-progress', progress);
+    var ledger = '<div><span>技能</span><b>' + (ugState.pre.skill > 0 ? '+' : '') + (ugState.pre.skill || 0) + '</b></div>' +
+      '<div><span>精神</span><b>' + (ugState.pre.san > 0 ? '+' : '') + (ugState.pre.san || 0) + '</b></div>' +
+      '<div><span>存款</span><b>' + (ugState.pre.money > 0 ? '+' : '') + (ugState.pre.money || 0) + '</b></div>' +
+      '<div><span>初心</span><b>' + (ugState.pre.ideal > 0 ? '+' : '') + (ugState.pre.ideal || 0) + '</b></div>';
+    setHTML('ug-ledger', ledger);
+    document.getElementById('ug-kicker').textContent = item.kicker;
+    document.getElementById('ug-title').textContent = item.title;
+    setHTML('ug-body', item.body.map(function (p) { return '<p>' + p + '</p>'; }).join(''));
+    var choicesEl = document.getElementById('ug-choices');
+    var nextEl = document.getElementById('ug-next');
+    choicesEl.innerHTML = '';
+    nextEl.innerHTML = '';
+
+    if (ugState.result) {
+      choicesEl.innerHTML = '<div class="ug-result">' + ugState.result.text + deltaHtml(ugState.result.effects) + '</div>';
+      var label = ugState.index >= D.undergrad.length - 1 ? '走进医院 →' : '继续 →';
+      nextEl.innerHTML = '<button class="btn primary" id="ug-continue">' + label + '</button>';
+      document.getElementById('ug-continue').addEventListener('click', ugContinue);
+      return;
+    }
+
+    if (item.choices && item.choices.length) {
+      choicesEl.innerHTML = item.choices.map(function (c, i) {
+        return '<button class="ug-choice" data-i="' + i + '">' +
+          '<span class="ug-choice-no">0' + (i + 1) + '</span>' +
+          '<span class="ug-choice-text">' + c.text + '</span>' +
+          '<span class="ug-choice-hint">' + (c.hint || '') + '</span>' +
+          '</button>';
+      }).join('');
+      $$('.ug-choice', choicesEl).forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          ugChoose(parseInt(btn.getAttribute('data-i'), 10));
+        });
+      });
+    } else {
+      nextEl.innerHTML = '<button class="btn ghost" id="ug-continue">继续 →</button>';
+      document.getElementById('ug-continue').addEventListener('click', ugContinue);
+    }
+  }
+
+  async function ugChoose(i) {
+    var item = D.undergrad[ugState.index];
+    var ch = item.choices[i];
+    beep(480, 0.06, 0.03, 'triangle');
+    if (ch.quit) {
+      var v = await modal({
+        kicker: '转行确认', title: '你确定要放弃吗？',
+        body: '<p>你妈会哭三天，你爸会一个月不跟你说话。</p><p>但你才二十几岁，还来得及。</p>',
+        choices: [
+          { text: '我确定，趁还来得及', value: 'yes', className: 'danger' },
+          { text: '再想想', value: 'no' }
+        ]
+      });
+      if (v === 'yes') earlyQuit();
+      return;
+    }
+    applyPre(ch.effects);
+    if (ch.flag === 'master') { ugState.edu = '硕士'; ugState.path = 'master'; }
+    if (ch.flag === 'bachelor') { ugState.edu = '本科'; ugState.path = 'social'; }
+    ugState.result = { text: ch.result, effects: ch.effects };
+    renderUG();
+    playDeltaSound(ch.effects);
+  }
+  function playDeltaSound(effects) {
+    var bad = false, good = false;
+    Object.keys(effects).forEach(function (k) { if (effects[k] < 0) bad = true; if (effects[k] > 0) good = true; });
+    if (bad) beep(210, 0.12, 0.03, 'sine');
+    if (good) setTimeout(function () { beep(660, 0.08, 0.025, 'sine'); }, 80);
+  }
+  function ugContinue() {
+    ugState.result = null;
+    ugState.index++;
+    if (ugState.index >= D.undergrad.length) startResidency();
+    else renderUG();
+  }
+
+  function earlyQuit() {
+    S = {
+      month: 0, totalMonths: 36, age: 23,
+      hp: 100, san: 100, money: 8000, skill: 20, boss: 30, hair: 100, ideal: 100,
+      edu: ugState.edu, flags: {}, seen: [], log: [], deptIndex: -1, dept: null,
+      lastFamily: -99, finalFails: 0, finished: true, ending: 'early_quit', nights: 0
+    };
+    Object.keys(ugState.pre).forEach(function (k) {
+      if (k === 'money') S.money += ugState.pre[k];
+      else S[k] = clamp(S[k] + ugState.pre[k], 0, k === 'skill' ? 120 : 100);
+    });
+    try { localStorage.removeItem(SAVE_KEY); } catch (e) {}
+    renderEnding('early_quit');
+  }
+
+  /* ---------------- 规培 ---------------- */
+  function rotateDept(first) {
+    if (!S) return;
+    if (S.deptIndex < 0) S.deptIndex = 0;
+    else S.deptIndex = (S.deptIndex + 1) % D.departments.length;
+    S.dept = D.departments[S.deptIndex];
+    if (!first) addLog('轮转', '你被轮转到' + S.dept.name + '。', 'good');
+  }
+
+  function applyPassive() {
+    var dept = S.dept || D.departments[0];
+    var hpLoss = 1 + (dept.mod.hp || 0);
+    var sanLoss = 1 + (dept.mod.san || 0);
+    S.hp = clamp(S.hp - hpLoss, 0, 100);
+    S.san = clamp(S.san - sanLoss, 0, 100);
+    S.hair = clamp(S.hair - 1, 0, 100);
+    S.skill = clamp(S.skill + (dept.mod.skill || 0), 0, 120);
+    S.money -= 400;
+    if (S.money < 0) S.san = clamp(S.san - 2, 0, 100);
+    if (S.money < -10000) S.san = clamp(S.san - 2, 0, 100);
+    if (S.month % 3 === 0) S.ideal = clamp(S.ideal - 1, 0, 100);
+    addLog('月度', pick([
+      '这个月，排班表上有 8 个夜班。',
+      '科室又加床了，走廊里住满了人。',
+      '你算了一下，这个月能休两天。',
+      '护士站的白板换了一版新的排班。',
+      '你在值班室醒来，忘了今天是几号。',
+      '补贴到账 1800，房租扣了 1500。',
+      '你第 4 次在凌晨两点吃泡面。'
+    ]));
+  }
+
+  function beginMonth() {
+    if (!S || S.finished) return;
+    if (S.month > S.totalMonths) { finishGame(); return; }
+    if (S.deptIndex < 0) rotateDept(true);
+    else if (S.month > 1 && (S.month - 1) % 3 === 0) rotateDept(false);
+    applyPassive();
+    if (S.hp <= 0) { endGame('death'); return; }
+    if (S.san <= 0) { endGame('breakdown'); return; }
+    renderGame();
+    save();
+  }
+
+  function renderHUD() {
+    var moneyPct = clamp((S.money + 10000) / 40000 * 100, 0, 100);
+    var stats = [
+      { k: 'hp', label: '体力', val: Math.round(S.hp), max: 100 },
+      { k: 'san', label: '精神', val: Math.round(S.san), max: 100 },
+      { k: 'money', label: '存款', val: fmtMoney(S.money), max: 100, pct: moneyPct },
+      { k: 'skill', label: '技能', val: Math.round(S.skill), max: 120 },
+      { k: 'boss', label: '导师', val: Math.round(S.boss), max: 100 },
+      { k: 'hair', label: '发量', val: Math.round(S.hair), max: 100 }
+    ];
+    var html = stats.map(function (st) {
+      var pct = st.pct !== undefined ? st.pct : clamp(st.val / st.max * 100, 0, 100);
+      var low = (st.k === 'hp' || st.k === 'san' || st.k === 'hair') && st.val < 30;
+      var moneyLow = st.k === 'money' && S.money < 0;
+      return '<div class="stat ' + (low || moneyLow ? 'low ' : '') + st.k + '">' +
+        '<div class="stat-top"><span class="stat-label">' + st.label + '</span><span class="stat-val">' + st.val + '</span></div>' +
+        '<div class="stat-bar"><i style="width:' + pct.toFixed(1) + '%;--accent:var(--' + (st.k === 'hp' ? 'red' : st.k === 'san' ? 'violet' : st.k === 'money' ? 'green' : st.k === 'skill' ? 'teal' : st.k === 'boss' ? 'amber' : 'pink') + ')"></i></div>' +
+        '</div>';
+    }).join('');
+    setHTML('hud', html);
+  }
+
+  function effectChips(effects) {
+    return Object.keys(effects).map(function (k) {
+      var v = effects[k];
+      var cls = k === 'money' ? 'money' : (v > 0 ? 'good' : 'bad');
+      var txt = k === 'money' ? (v > 0 ? '+¥' : '-¥') + Math.abs(v) : (v > 0 ? '+' : '') + v;
+      return '<span class="chip ' + cls + '">' + LABELS[k] + ' ' + txt + '</span>';
+    }).join('');
+  }
+
+  function renderActions() {
+    var html = D.actions.map(function (a, i) {
+      var cd = 0;
+      if (a.cooldown) cd = a.cooldown - (S.month - S.lastFamily);
+      var disabled = cd > 0;
+      var desc = disabled ? '家里也不宽裕。再等 ' + cd + ' 个月。' : a.desc;
+      return '<button class="action ' + (a.id === 'family' ? 'family ' : '') + (disabled ? 'disabled' : '') + '" data-id="' + a.id + '"' + (disabled ? ' disabled' : '') + '>' +
+        '<span class="action-key">' + (i + 1) + '</span>' +
+        '<span class="action-icon">' + a.icon + '</span>' +
+        '<span class="action-name">' + a.name + '</span>' +
+        '<span class="action-sub">' + a.sub + '</span>' +
+        '<span class="action-desc">' + desc + '</span>' +
+        '<span class="action-chips">' + effectChips(a.effects) + '</span>' +
+        '</button>';
+    }).join('');
+    setHTML('actions', html);
+  }
+
+  function renderGame() {
+    if (!S) return;
+    document.getElementById('clock').textContent = formatDate(S.month);
+    document.getElementById('clock-sub').textContent = '规培第 ' + Math.ceil(S.month / 12) + ' 年 · 第 ' + (((S.month - 1) % 12) + 1) + ' 个月 · ' + ageAt(S.month) + ' 岁';
+    if (S.dept) {
+      document.getElementById('dept-icon').textContent = S.dept.icon;
+      document.getElementById('dept-name').textContent = S.dept.name;
+      document.getElementById('dept-quote').textContent = S.dept.quote;
+    }
+    renderHUD();
+    renderActions();
+    renderMonthCard();
+    renderSide();
+    renderLog();
+    refreshContinue();
+  }
+
+  function renderMonthCard() {
+    if (!S.dept) return;
+    var warn = '';
+    if (S.hp < 25) warn = '你已经很久没有睡过一个完整的觉了。站起来的时候，眼前会发黑。';
+    else if (S.san < 25) warn = '你开始记不住事情。查房时走神，写病程时盯着屏幕发呆。';
+    else if (S.money < 0) warn = '花呗额度快用完了。你开始认真考虑，要不要再给家里打电话。';
+    else if (S.money < 3000) warn = '存款不多了。这个月，你大概率要靠夜班费撑过去。';
+    else warn = '住院总在群里发了新的排班表。你数了数，这个月有 8 个夜班。';
+    var html = '<div class="mc-title">' + S.dept.name + ' · 第 ' + (((S.month - 1) % 12) + 1) + ' 个月</div>' +
+      '<div>' + S.dept.quote + '</div>' +
+      '<div class="mc-sub">本月固定收支：补贴 +1800 · 房租伙食 -2200 · 净 -400</div>' +
+      '<div class="mc-sub" style="color:' + (S.hp < 30 || S.san < 30 ? '#e5a0a0' : '#637976') + '">' + warn + '</div>';
+    setHTML('month-card', html);
+  }
+
+  function renderSide() {
+    var ideal = Math.round(S.ideal);
+    document.getElementById('ideal-num').textContent = ideal;
+    document.getElementById('ideal-fill').style.width = clamp(ideal, 0, 100) + '%';
+    var note = ideal >= 80 ? '“我想救人。”' : ideal >= 60 ? '“再撑撑，也许就好了。”' : ideal >= 40 ? '“这真的是我想要的生活吗？”' : ideal >= 20 ? '“我只是不知道还能做什么。”' : '“随便吧。”';
+    document.getElementById('ideal-note').textContent = note;
+    var tip = '';
+    if (S.hp < 30) tip = '体力低于 25 时，任何一次熬夜都可能要命。这个月，请休息。';
+    else if (S.san < 30) tip = '精神低于 25 时，你会开始失控。去找人说说话，或者睡一觉。';
+    else if (S.money < 0) tip = '存款为负，每月额外掉精神。接一个夜班，或者给家里打个电话。';
+    else if (S.skill < 55 && S.month > 18) tip = '结业考核看技能。你现在的技能，可能不够。';
+    else if (S.boss < 40 && S.month > 24) tip = '导师评价会影响留院。你最近是不是得罪人了？';
+    else tip = '每个月，你只能选一件事。你不可能全都要。';
+    document.getElementById('side-tip').textContent = tip;
+  }
+
+  function addLog(tag, text, tone) {
+    if (!S) return;
+    S.log.push({ m: S.month, tag: tag, text: text, tone: tone || '' });
+    if (S.log.length > 120) S.log.shift();
+  }
+  function renderLog() {
+    var html = S.log.slice(-40).map(function (l) {
+      return '<div class="log-item ' + (l.tone || '') + '"><b>' + shortDate(l.m) + ' · ' + l.tag + '</b>' + l.text + '</div>';
+    }).join('');
+    setHTML('log', html);
+    document.getElementById('log-count').textContent = S.log.length;
+    var box = document.getElementById('log');
+    if (box) box.scrollTop = box.scrollHeight;
+  }
+
+  function applyEffects(effects) {
+    var actual = {};
+    Object.keys(effects || {}).forEach(function (k) {
+      var v = effects[k];
+      if (!v) return;
+      var before = S[k] || 0;
+      var after = before + v;
+      if (k === 'money') after = Math.round(after);
+      else after = clamp(after, 0, k === 'skill' ? 120 : 100);
+      S[k] = after;
+      actual[k] = after - before;
+    });
+    return actual;
+  }
+
+  function checkDead() {
+    if (!S) return false;
+    if (S.hp <= 0) { endGame('death'); return true; }
+    if (S.san <= 0) { endGame('breakdown'); return true; }
+    return false;
+  }
+
+  async function doAction(id) {
+    if (busy || !S || S.finished) return;
+    var a = null;
+    for (var i = 0; i < D.actions.length; i++) if (D.actions[i].id === id) a = D.actions[i];
+    if (!a) return;
+    if (a.cooldown && S.month - S.lastFamily < a.cooldown) return;
+    busy = true;
+    if (id === 'family') S.lastFamily = S.month;
+    if (id === 'night') S.nights = (S.nights || 0) + 1;
+    var actual = applyEffects(a.effects);
+    var line = pick(a.lines);
+    addLog(a.name, line, actual.hp < -8 || actual.san < -8 ? 'hot' : (actual.san > 0 ? 'good' : ''));
+    if (actual.san < 0 || actual.hp < 0) beep(200, 0.12, 0.03, 'sine');
+    else beep(620, 0.08, 0.025, 'sine');
+    await modal({
+      kicker: '本月行动 · ' + formatDate(S.month),
+      title: a.name,
+      body: '<p>' + line + '</p>' + deltaHtml(actual),
+      choices: [{ text: '继续' }]
+    });
+    if (checkDead()) { busy = false; return; }
+
+    var ev = null;
+    if (S.month === 35 && S.seen.indexOf('final_night') < 0) ev = byId('final_night');
+    else if (Math.random() < 0.55) ev = drawEvent();
+    if (ev) {
+      await playEvent(ev);
+      if (checkDead()) { busy = false; return; }
+    }
+
+    await maybeExam();
+    if (S.finished) { busy = false; return; }
+
+    S.month++;
+    S.age = ageAt(S.month);
+    busy = false;
+    if (S.month > S.totalMonths) { finishGame(); return; }
+    beginMonth();
+  }
+
+  function drawEvent() {
+    var pool = D.events.filter(function (ev) {
+      if (S.seen.indexOf(ev.id) >= 0) return false;
+      if (ev.min && S.month < ev.min) return false;
+      if (ev.max && S.month > ev.max) return false;
+      if (ev.cond && !ev.cond(S)) return false;
+      return true;
+    });
+    if (!pool.length) return null;
+    var total = 0;
+    pool.forEach(function (ev) { total += (ev.w || 3); });
+    var r = Math.random() * total;
+    for (var i = 0; i < pool.length; i++) {
+      r -= (pool[i].w || 3);
+      if (r <= 0) return pool[i];
+    }
+    return pool[pool.length - 1];
+  }
+
+  function weighted(outcomes) {
+    var total = 0;
+    outcomes.forEach(function (o) { total += (o.w || 1); });
+    var r = Math.random() * total;
+    for (var i = 0; i < outcomes.length; i++) {
+      r -= (outcomes[i].w || 1);
+      if (r <= 0) return outcomes[i];
+    }
+    return outcomes[outcomes.length - 1];
+  }
+
+  async function playEvent(ev) {
+    var choice = await modal({
+      kicker: '突发事件 · ' + formatDate(S.month),
+      title: ev.t,
+      body: '<p>' + ev.text + '</p>',
+      choices: ev.c.map(function (c) {
+        return { text: c.text, hint: c.hint || '' };
+      })
+    });
+    var picked = ev.c[choice];
+    var out = weighted(picked.o);
+    var actual = applyEffects(out.e || {});
+    if (out.f) Object.keys(out.f).forEach(function (k) { S.flags[k] = out.f[k]; });
+    S.seen.push(ev.id);
+    addLog(ev.t, out.r, actual.san < -8 || actual.hp < -8 ? 'hot' : (actual.san > 0 ? 'good' : ''));
+    beep(actual.hp < 0 || actual.san < 0 ? 190 : 700, 0.1, 0.03, 'sine');
+    await modal({
+      kicker: '结果 · ' + ev.t,
+      title: '事情就是这样',
+      body: '<p>' + out.r + '</p>' + deltaHtml(actual),
+      choices: [{ text: '继续' }]
+    });
+  }
+
+  /* ---------------- 考核 ---------------- */
+  async function maybeExam() {
+    if (S.finished) return;
+    if (S.month === 9) return runExam('license');
+    if ((S.month === 15 || S.month === 21) && !S.licensePassed) return runExam('license');
+    if (S.month === 12 || S.month === 24) return runExam('annual');
+    if (S.month === S.totalMonths) return runExam('final');
+  }
+
+  async function runExam(kind) {
+    var cfg = D.exams[kind];
+    var threshold = 0;
+    var body = cfg.body.slice();
+    var retry = false;
+    if (kind === 'license') {
+      threshold = cfg.threshold;
+      if (S.month > 9 || S.licensePassed === false && S.month > 9) retry = true;
+    } else if (kind === 'annual') {
+      threshold = cfg.thresholds[S.month] || 60;
+    } else {
+      threshold = cfg.threshold;
+      if (S.finalFails > 0) retry = true;
+    }
+    if (retry && cfg.retryText) body = [cfg.retryText];
+
+    var go = await modal({
+      kicker: cfg.kicker + ' · ' + formatDate(S.month),
+      title: cfg.title,
+      body: body.map(function (p) { return '<p>' + p + '</p>'; }).join('') +
+        '<p class="quiet">通过线：' + threshold + ' · 你的技能：' + Math.round(S.skill) + ' · 导师评价：' + Math.round(S.boss) + '</p>',
+      choices: [
+        { text: '直接进考场', value: 'go', className: 'primary' },
+        { text: '再看一眼书（技能 +1，精神 -3）', value: 'study' }
+      ]
+    });
+    if (go === 'study') {
+      var d = applyEffects({ skill: 1, san: -3 });
+      toastDeltas(d);
+    }
+
+    var examSkill = Math.round(S.skill);
+    var examBoss = Math.round(S.boss);
+    var score = Math.min(100, Math.round(S.skill * 0.85 + S.boss * 0.15 + rand(-6, 10) + (kind === 'final' && S.finalFails > 0 ? 3 : 0)));
+    var pass = score >= threshold;
+    var effects = pass ? (cfg.passEffects || {}) : (cfg.failEffects || {});
+    var actual = applyEffects(effects);
+    var resultTitle = pass ? (cfg.passTitle || '通过') : (cfg.failTitle || '未通过');
+    var resultText = pass ? cfg.passText : cfg.failText;
+    if (kind === 'license' && !pass) {
+      var gap = threshold - score;
+      resultTitle = '差了 ' + gap + ' 分';
+      resultText = resultText.replace(/差了 6 分/g, '差了 ' + gap + ' 分');
+    }
+
+    if (kind === 'license' && pass) S.licensePassed = true;
+    if (kind === 'final' && !pass) {
+      S.finalFails++;
+      if (S.finalFails === 1) S.totalMonths += 6;
+    }
+
+    var extra = '';
+    if (kind === 'final' && !pass && S.finalFails === 1) {
+      extra = '<p class="warn">延期六个月。第 ' + S.totalMonths + ' 个月，补考。</p>';
+      addLog('考核', '结业考核未通过，延期六个月。', 'hot');
+    }
+    if (kind === 'final' && pass) addLog('考核', '结业考核通过。', 'good');
+    if (kind === 'license' && pass) addLog('考核', '执业医师资格考试通过。', 'good');
+
+    await modal({
+      kicker: cfg.kicker + ' · 结果',
+      title: resultTitle,
+      body: '<div class="exam-score"><div class="exam-num ' + (pass ? '' : 'fail') + '">' + score + '</div>' +
+        '<div class="exam-info">通过线 ' + threshold + '<br>技能 ' + examSkill + ' · 导师评价 ' + examBoss + '</div></div>' +
+        '<div class="exam-stamp ' + (pass ? '' : 'fail') + '">' + (pass ? '通过' : '未通过') + '</div>' +
+        '<p>' + resultText + '</p>' + extra + deltaHtml(actual),
+      choices: [{ text: '继续' }]
+    });
+
+    if (kind === 'final' && !pass && S.finalFails >= 2) {
+      endGame('fail');
+      return;
+    }
+    if (kind === 'final' && pass) {
+      finishGame();
+    }
+  }
+
+  /* ---------------- 结局 ---------------- */
+  function resolveEnding() {
+    if (S.finalFails >= 2) return 'fail';
+    if (S.flags.phdPlan && S.skill >= 75) return 'phd';
+    if (S.flags.civilPlan) return 'civil';
+    if (S.flags.pharmaPlan) return 'pharma';
+    if (S.flags.countyPlan) return 'county';
+    if (S.ideal <= 5) return 'numb';
+    if (S.edu === '硕士' && S.boss >= 70 && S.skill >= 88 && S.hp >= 40 && S.san >= 35) {
+      if (S.skill >= 98 && S.boss >= 90 && S.san >= 55 && S.hp >= 50 && Math.random() < 0.2) return 'director';
+      return 'stay';
+    }
+    if (S.edu === '本科' || S.skill < 80) return 'county';
+    return 'ordinary';
+  }
+
+  function finishGame() {
+    if (!S || S.finished) return;
+    endGame(resolveEnding());
+  }
+
+  function endGame(id) {
+    if (!S) return;
+    S.finished = true;
+    S.ending = id;
+    S.endedAt = S.month;
+    try { localStorage.removeItem(SAVE_KEY); } catch (e) {}
+    renderEnding(id);
+  }
+
+  function renderEnding(id) {
+    var e = D.endings[id];
+    if (!e || !S) return;
+    endingData = e;
+    var age = S.age || 23;
+    var sub = (e.sub || '').replace(/26 岁/g, age + ' 岁').replace(/第 14 个月/g, '第 ' + S.month + ' 个月').replace(/第 N 个月/g, '第 ' + S.month + ' 个月');
+    document.getElementById('ending-kicker').textContent = e.kicker;
+    document.getElementById('ending-title').textContent = e.title;
+    document.getElementById('ending-sub').textContent = sub;
+    var extra = [];
+    if (S.money < 0) extra.push('你的存款是 ' + fmtMoney(S.money) + '。花呗、借呗、白条，你都开通了。');
+    if (S.hp < 30) extra.push('你的体检报告上，有三项异常。');
+    if (S.san < 30) extra.push('你已经很久没有真正笑过了。');
+    if (S.hair < 40) extra.push('你的发际线，比你更早放弃了。');
+    if (S.ideal < 20) extra.push('你已经想不起来，自己为什么在这里。');
+    setHTML('ending-body', e.body.map(function (p) {
+      return '<p>' + p.replace(/26 岁/g, age + ' 岁') + '</p>';
+    }).join('') + (extra.length ? '<p class="extra">' + extra.join(' ') + '</p>' : ''));
+    document.getElementById('ending-quote').textContent = e.quote;
+
+    var statList = [
+      ['年龄', age + ' 岁', false],
+      ['规培', Math.max(0, S.month) + ' 个月', false],
+      ['存款', fmtMoney(S.money), S.money < 0],
+      ['技能', Math.round(S.skill), false],
+      ['发量', Math.round(S.hair), S.hair < 40],
+      ['初心', Math.round(S.ideal), S.ideal < 30]
+    ];
+    setHTML('ending-stats', statList.map(function (s) {
+      return '<div class="es ' + (s[2] ? 'bad' : '') + '"><span>' + s[0] + '</span><b>' + s[1] + '</b></div>';
+    }).join(''));
+    var trainYears = Math.max(0, S.month) / 12;
+    var trainText = (trainYears % 1 === 0 ? trainYears : trainYears.toFixed(1)) + ' 年';
+    var ledgerText = S.month > 0
+      ? '5 年本科 + ' + trainText + '规培 · 值了 ' + (S.nights || 0) + ' 个夜班 · 补贴 1800/月 · 你 ' + age + ' 岁'
+      : '5 年本科 · 在第 5 年转行 · 你 ' + age + ' 岁';
+    document.getElementById('ending-ledger').textContent = ledgerText;
+
+    var compare = '<div class="compare-head"><span>年龄</span><span>你</span><span>你的高中同学（计算机）</span></div>' +
+      D.timeline.map(function (r) {
+        return '<div class="compare-row"><span class="age">' + r.age + '</span><span class="you">' + r.you + '</span><span class="them">' + r.them + '</span></div>';
+      }).join('') +
+      '<div class="compare-note">不是每个人都走同一条路。但时间对每个人都是公平的。</div>';
+    setHTML('ending-compare', compare);
+
+    document.getElementById('score-note').textContent = e.note;
+    var scoreEl = document.getElementById('quit-index');
+    var target = e.score;
+    var t0 = 0;
+    function tick(ts) {
+      if (!t0) t0 = ts;
+      var p = Math.min(1, (ts - t0) / 1400);
+      var eased = 1 - Math.pow(1 - p, 3);
+      scoreEl.textContent = (target * eased).toFixed(1);
+      if (p < 1) requestAnimationFrame(tick);
+    }
+    scoreEl.textContent = '0.0';
+    requestAnimationFrame(tick);
+
+    showScreen('ending');
+    if (id === 'death' || id === 'breakdown' || id === 'fail') flatline();
+    else beep(330, 0.25, 0.03, 'sine');
+    refreshContinue();
+  }
+
+  /* ---------------- 劝退报告 ---------------- */
+  function renderReport() {
+    var html = D.report.map(function (b) {
+      var table = '';
+      if (b.table) {
+        table = '<table class="report-table"><thead><tr>' +
+          b.table.head.map(function (h) { return '<th>' + h + '</th>'; }).join('') +
+          '</tr></thead><tbody>' +
+          b.table.rows.map(function (r) {
+            return '<tr>' + r.map(function (c) { return '<td>' + c + '</td>'; }).join('') + '</tr>';
+          }).join('') +
+          '</tbody></table>';
+      }
+      return '<section class="report-block">' +
+        '<h3><span class="no">' + b.no + '</span>' + b.title + '</h3>' +
+        '<p>' + b.intro + '</p>' +
+        '<ul>' + b.list.map(function (li) { return '<li>' + li + '</li>'; }).join('') + '</ul>' +
+        table +
+        (b.callout ? '<div class="report-callout">' + b.callout + '</div>' : '') +
+        '</section>';
+    }).join('');
+    setHTML('report-body', html);
+  }
+  function openReport() {
+    if (currentScreen !== 'report') reportReturn = currentScreen;
+    renderReport();
+    showScreen('report');
+  }
+  function closeReport() {
+    var back = reportReturn;
+    if (back === 'game' && (!S || S.finished)) back = 'title';
+    if (back === 'ending' && (!S || !S.finished)) back = 'title';
+    if (back === 'game') renderGame();
+    showScreen(back || 'title');
+  }
+
+  /* ---------------- 平行人生 ---------------- */
+  function showAlt(id) {
+    var a = D.altLives[id];
+    if (!a) { showScreen('apply'); return; }
+    var html = '<div class="alt-emoji">' + a.emoji + '</div>' +
+      '<div class="alt-kicker">' + a.kicker + '</div>' +
+      '<h2 class="alt-title">' + a.title + '</h2>' +
+      '<div class="alt-body">' + a.body.map(function (p) { return '<p>' + p + '</p>'; }).join('') + '</div>' +
+      '<div class="alt-costs"><h4>代价</h4><ul>' + a.costs.map(function (c) { return '<li>' + c + '</li>'; }).join('') + '</ul></div>' +
+      '<div class="alt-quote">' + a.quote + '</div>' +
+      '<div class="alt-foot">每条路都有代价。只是临床医学的代价，是按十年计的。</div>' +
+      '<div class="alt-actions">' +
+      '<button class="btn ghost" id="alt-back">回到志愿表</button>' +
+      '<button class="btn link" id="alt-med">我还是想学医 →</button>' +
+      '</div>';
+    document.getElementById('alt-wrap').innerHTML = html;
+    showScreen('alt');
+    document.getElementById('alt-back').addEventListener('click', function () { showScreen('apply'); });
+    document.getElementById('alt-med').addEventListener('click', async function () {
+      var v = await modal({
+        kicker: '我们知道劝不住你', title: '那就进去看看。',
+        body: '<p>记住，这是你自己选的。</p>',
+        choices: [
+          { text: '进去', value: 'go', className: 'danger' },
+          { text: '再想想', value: 'no' }
+        ]
+      });
+      if (v === 'go') beginUndergrad({ ideal: 5 });
+    });
+  }
+
+  /* ---------------- 结局卡 ---------------- */
+  function wrapLines(ctx, text, maxWidth) {
+    var lines = [];
+    var current = '';
+    for (var i = 0; i < text.length; i++) {
+      var ch = text[i];
+      if (ch === '\n') { lines.push(current); current = ''; continue; }
+      var test = current + ch;
+      if (ctx.measureText(test).width > maxWidth && current) {
+        lines.push(current); current = ch;
+      } else current = test;
+    }
+    if (current) lines.push(current);
+    return lines;
+  }
+  async function saveEndingCard() {
+    if (!endingData || !S) return;
+    try { await Promise.race([document.fonts.ready, new Promise(function (r) { setTimeout(r, 900); })]); } catch (e) {}
+    try {
+    var c = document.createElement('canvas');
+    c.width = 1080; c.height = 1440;
+    var x = c.getContext('2d');
+    var bg = x.createLinearGradient(0, 0, 0, 1440);
+    bg.addColorStop(0, '#0b1416'); bg.addColorStop(1, '#070b0c');
+    x.fillStyle = bg; x.fillRect(0, 0, 1080, 1440);
+    x.strokeStyle = 'rgba(122,178,172,0.055)'; x.lineWidth = 1;
+    for (var gx = 0; gx < 1080; gx += 80) { x.beginPath(); x.moveTo(gx, 0); x.lineTo(gx, 1440); x.stroke(); }
+    for (var gy = 0; gy < 1440; gy += 80) { x.beginPath(); x.moveTo(0, gy); x.lineTo(1080, gy); x.stroke(); }
+    x.strokeStyle = 'rgba(122,178,172,0.28)'; x.lineWidth = 2; x.strokeRect(46, 46, 988, 1348);
+    x.fillStyle = '#4fd1c5'; x.font = '500 19px Consolas, monospace';
+    x.fillText('QUIT MED · 2026', 92, 120);
+    x.fillStyle = '#e8f0ed'; x.font = '900 92px "Noto Serif SC","SimSun",serif';
+    x.fillText('劝人学医', 92, 235);
+    x.strokeStyle = '#e5484d'; x.lineWidth = 4; x.strokeRect(790, 145, 108, 108);
+    x.fillStyle = '#e5484d'; x.font = '700 34px "Noto Serif SC","SimSun",serif';
+    x.fillText('临', 816, 195); x.fillText('床', 856, 235);
+
+    x.fillStyle = '#e5484d'; x.font = '500 20px Consolas, monospace';
+    x.fillText(endingData.kicker, 92, 330);
+    x.fillStyle = '#e8f0ed'; x.font = '700 58px "Noto Serif SC","SimSun",serif';
+    var titleLines = wrapLines(x, endingData.title, 860);
+    var ty = 410;
+    titleLines.forEach(function (line) { x.fillText(line, 92, ty); ty += 74; });
+
+    x.fillStyle = '#8ea3a0'; x.font = '400 22px "Noto Sans SC","Microsoft YaHei",sans-serif';
+    var sub = (endingData.sub || '').replace(/26 岁/g, (S.age || 23) + ' 岁');
+    x.fillText(sub, 92, ty + 10);
+    ty += 64;
+
+    x.fillStyle = '#c3d1cd'; x.font = '400 24px "Noto Serif SC","SimSun",serif';
+    var bodyText = endingData.body.join('\n');
+    var bodyLines = wrapLines(x, bodyText, 880);
+    bodyLines.slice(0, 8).forEach(function (line) {
+      x.fillText(line, 92, ty); ty += 44;
+    });
+
+    ty = Math.max(ty + 24, 900);
+    var stats = [
+      ['年龄', (S.age || 23) + ' 岁'], ['规培', Math.max(0, S.month) + ' 个月'], ['存款', fmtMoney(S.money)],
+      ['技能', Math.round(S.skill)], ['发量', Math.round(S.hair)], ['初心', Math.round(S.ideal)]
+    ];
+    stats.forEach(function (st, i) {
+      var col = i % 3, row = Math.floor(i / 3);
+      var sx = 92 + col * 300, sy = ty + row * 110;
+      x.strokeStyle = 'rgba(122,178,172,0.18)'; x.lineWidth = 1; x.strokeRect(sx, sy, 280, 86);
+      x.fillStyle = '#637976'; x.font = '400 16px "Noto Sans SC","Microsoft YaHei",sans-serif';
+      x.fillText(st[0], sx + 18, sy + 30);
+      x.fillStyle = '#e8f0ed'; x.font = '500 30px Consolas, monospace';
+      x.fillText(String(st[1]), sx + 18, sy + 68);
+    });
+
+    x.fillStyle = '#e5484d'; x.font = '500 92px Consolas, monospace';
+    x.fillText(endingData.score.toFixed(1), 92, 1260);
+    x.fillStyle = '#8ea3a0'; x.font = '400 18px "Noto Sans SC","Microsoft YaHei",sans-serif';
+    x.fillText('劝 退 指 数', 94, 1300);
+    x.fillStyle = '#b9a4a4'; x.font = '400 20px "Noto Serif SC","SimSun",serif';
+    x.fillText(endingData.quote, 420, 1258, 560);
+    x.fillStyle = '#637976'; x.font = '400 16px Consolas, monospace';
+    x.fillText('劝人学医，天打雷劈。  /  ' + formatDate(Math.max(1, S.month)), 92, 1350);
+
+    var blob = await new Promise(function (resolve) { c.toBlob(resolve, 'image/png'); });
+    if (!blob) { toast('生成失败，请重试。', 'down'); return; }
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = '劝人学医-' + endingData.title + '.png';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+    toast('结局卡已保存。', 'up');
+    } catch (err) {
+      console.error('ending card failed', err);
+      toast('生成失败：' + (err && err.message ? err.message : '未知错误'), 'down');
+    }
+  }
+
+  /* ---------------- 开局 / 交互 ---------------- */
+  function newGame() {
+    try { localStorage.removeItem(SAVE_KEY); } catch (e) {}
+    S = null;
+    showScreen('apply');
+    refreshContinue();
+  }
+
+  function startResidency() {
+    var pre = ugState.pre || {};
+    S = {
+      month: 1, totalMonths: 36, age: 23,
+      hp: clamp(100 + (pre.hp || 0), 0, 100),
+      san: clamp(100 + (pre.san || 0), 0, 100),
+      money: 8000 + (pre.money || 0),
+      skill: clamp(20 + (pre.skill || 0), 0, 120),
+      boss: clamp(30 + (pre.boss || 0), 0, 100),
+      hair: clamp(100 + (pre.hair || 0), 0, 100),
+      ideal: clamp(100 + (pre.ideal || 0), 0, 100),
+      edu: ugState.edu || '本科',
+      path: ugState.path || 'social',
+      flags: {},
+      seen: [], log: [], deptIndex: -1, dept: null,
+      lastFamily: -99, finalFails: 0, finished: false, ending: null, nights: 0
+    };
+    rotateDept(true);
+    addLog('报到', '2031 年 8 月，你签了规培协议。36 个月，每月补贴 1800。');
+    showScreen('game');
+    renderGame();
+    modal({
+      kicker: '2031 年 8 月 · 规培报到',
+      title: '你签了字',
+      body: '<p>规培协议：36 个月，每月补贴 1800 元，不得擅自离岗。</p>' +
+        '<p>违约金：5 万元。</p>' +
+        '<p>人事科把笔递给你，说：“想好了？”</p>' +
+        '<p>你签了。</p>' +
+        '<p class="quiet">你被分到了' + S.dept.name + '。</p>',
+      choices: [{ text: '开始规培', value: 'go', className: 'primary' }]
+    }).then(function () {
+      beginMonth();
+    });
+  }
+
+  function bind() {
+    document.getElementById('btn-start').addEventListener('click', async function () {
+      if (hasSave()) {
+        var v = await modal({
+          kicker: '存档', title: '开始新的规培？',
+          body: '<p>当前存档会被覆盖。</p>',
+          choices: [
+            { text: '开始新的', value: 'yes', className: 'danger' },
+            { text: '继续上次', value: 'no' }
+          ]
+        });
+        if (v === 'yes') newGame();
+        else {
+          var saved = loadSave();
+          if (saved) { S = saved; showScreen('game'); renderGame(); }
+        }
+      } else newGame();
+    });
+    document.getElementById('btn-continue').addEventListener('click', function () {
+      var saved = loadSave();
+      if (!saved) { refreshContinue(); return; }
+      S = saved;
+      showScreen('game');
+      renderGame();
+      toast('继续上次的规培。', 'up');
+    });
+    document.getElementById('btn-sound').addEventListener('click', function () {
+      settings.sound = !settings.sound;
+      saveSettings();
+      beep(520, 0.06, 0.03, 'triangle');
+    });
+    var shareBtn = document.getElementById('btn-share');
+    if (shareBtn) {
+      if (location.protocol === 'file:') shareBtn.classList.add('hidden');
+      shareBtn.addEventListener('click', function () {
+        var url = location.href.split('#')[0];
+        function fallback() {
+          window.prompt('复制这个链接，发给正在填志愿的人：', url);
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url).then(function () {
+            toast('链接已复制，发给正在填志愿的人。', 'up');
+          }).catch(fallback);
+        } else {
+          fallback();
+        }
+      });
+    }
+    document.getElementById('btn-report').addEventListener('click', openReport);
+    document.getElementById('btn-report-title').addEventListener('click', openReport);
+    document.getElementById('btn-report-game').addEventListener('click', openReport);
+    document.getElementById('btn-report-end').addEventListener('click', openReport);
+    document.getElementById('btn-report-back').addEventListener('click', closeReport);
+    document.getElementById('btn-report-cta').addEventListener('click', function () { newGame(); });
+    document.getElementById('btn-apply-back').addEventListener('click', function () { showScreen('title'); refreshContinue(); });
+    document.getElementById('brand-home').addEventListener('click', async function () {
+      if (S && !S.finished && currentScreen === 'game') {
+        var v = await modal({
+          kicker: '离开', title: '回标题？',
+          body: '<p>当前进度会保存。你也可以继续玩。</p>',
+          choices: [{ text: '保存并回标题', value: 'yes' }, { text: '继续规培', value: 'no' }]
+        });
+        if (v === 'yes') { save(); refreshContinue(); showScreen('title'); }
+      } else { showScreen('title'); refreshContinue(); }
+    });
+    document.getElementById('major-list').addEventListener('click', function (e) {
+      var btn = e.target.closest('.major');
+      if (!btn) return;
+      var id = btn.getAttribute('data-id');
+      if (id === 'clinical') clinicalConfirm(0);
+      else showAlt(id);
+    });
+    document.getElementById('actions').addEventListener('click', function (e) {
+      var btn = e.target.closest('.action');
+      if (!btn || btn.classList.contains('disabled')) return;
+      doAction(btn.getAttribute('data-id'));
+    });
+    document.getElementById('btn-quit').addEventListener('click', async function () {
+      if (!S || S.finished) return;
+      var v = await modal({
+        kicker: '退培', title: '你确定要转行吗？',
+        body: '<p>退培要赔违约金，简历上会留下三年空白，你妈会哭。</p>' +
+          '<p>但你才二十几岁，还来得及。</p>',
+        choices: [
+          { text: '我确定，我要走', value: 'yes', className: 'danger' },
+          { text: '再撑撑', value: 'no' }
+        ]
+      });
+      if (v === 'yes') endGame('quit');
+    });
+    document.getElementById('btn-save-quit').addEventListener('click', function () {
+      save();
+      refreshContinue();
+      showScreen('title');
+      toast('已保存。', 'up');
+    });
+    document.getElementById('btn-again').addEventListener('click', newGame);
+    document.getElementById('btn-reapply').addEventListener('click', newGame);
+    document.getElementById('btn-card').addEventListener('click', saveEndingCard);
+    document.addEventListener('keydown', function (e) {
+      var root = document.getElementById('modal-root');
+      if (root && root.classList.contains('open')) {
+        var choices = $$('.modal-root .choice:not([disabled])');
+        var k = parseInt(e.key, 10);
+        if (k >= 1 && k <= choices.length) {
+          e.preventDefault();
+          choices[k - 1].click();
+        } else if (e.key === 'Enter' && choices.length === 1) {
+          e.preventDefault();
+          choices[0].click();
+        }
+        return;
+      }
+      if (currentScreen !== 'game' || !S || S.finished || busy) return;
+      var n = parseInt(e.key, 10);
+      if (n >= 1 && n <= D.actions.length) {
+        var a = D.actions[n - 1];
+        if (a.cooldown && S.month - S.lastFamily < a.cooldown) return;
+        doAction(a.id);
+      }
+    });
+    document.addEventListener('click', ensureAudio, { once: true });
+  }
+
+  /* ---------------- 调试接口（也方便玩家查看状态） ---------------- */
+  window.__QRSY__ = {
+    get state() { return S; },
+    get screen() { return currentScreen; },
+    doAction: doAction,
+    endGame: endGame,
+    runExam: runExam,
+    saveCard: saveEndingCard,
+    renderEnding: renderEnding,
+    setState: function (patch) { if (S) Object.assign(S, patch); },
+    data: D
+  };
+
+  /* ---------------- 启动 ---------------- */
+  function init() {
+    loadSettings();
+    var ticker = document.querySelector('.ticker-track');
+    if (ticker) ticker.innerHTML += ticker.innerHTML;
+    renderMajors();
+    bind();
+    initECG();
+    refreshContinue();
+    showScreen('title');
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+
+</script>
+</body>
+</html>

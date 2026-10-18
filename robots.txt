@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://eezmax222.github.io/quit-med/sitemap.xml

@@ -1,0 +1,16 @@
+{
+  "name": "劝人学医 · 临床医学劝退模拟器",
+  "short_name": "劝人学医",
+  "description": "一款关于医学生规培生存的黑色幽默文字游戏。在把青春押给临床医学之前，先看看代价。",
+  "lang": "zh-CN",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#070b0c",
+  "theme_color": "#070b0c",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
