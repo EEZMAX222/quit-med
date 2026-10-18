@@ -2765,9 +2765,9 @@ window.GAME_DATA = {
     for (var gy = 0; gy < 1440; gy += 80) { x.beginPath(); x.moveTo(0, gy); x.lineTo(1080, gy); x.stroke(); }
     x.strokeStyle = 'rgba(122,178,172,0.28)'; x.lineWidth = 2; x.strokeRect(46, 46, 988, 1348);
     x.fillStyle = '#4fd1c5'; x.font = '500 19px Consolas, monospace';
-    x.fillText('QUIT MED · 2026', 92, 120);
+    x.fillText('BEFORE MED · 2026', 92, 120);
     x.fillStyle = '#e8f0ed'; x.font = '900 92px "Noto Serif SC","SimSun",serif';
-    x.fillText('劝人学医', 92, 235);
+    x.fillText('学医之前', 92, 235);
     x.strokeStyle = '#e5484d'; x.lineWidth = 4; x.strokeRect(790, 145, 108, 108);
     x.fillStyle = '#e5484d'; x.font = '700 34px "Noto Serif SC","SimSun",serif';
     x.fillText('临', 816, 195); x.fillText('床', 856, 235);
@@ -2820,7 +2820,7 @@ window.GAME_DATA = {
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
     a.href = url;
-    a.download = '劝人学医-' + endingData.title + '.png';
+    a.download = '学医之前-' + endingData.title + '.png';
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
     setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
     toast('结局卡已保存。', 'up');
